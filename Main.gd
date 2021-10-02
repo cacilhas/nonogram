@@ -6,6 +6,7 @@ var cell_size: float
 
 onready var board: ColorRect = $Board
 onready var maze: Maze = Maze.new(Global.size)
+onready var tips: Label = $Tips/Label
 onready var victory: Label = $Victory/Label
 
 
@@ -53,3 +54,7 @@ func _input(_event: InputEvent) -> void:
 func _on_done(board: PoolByteArray) -> void:
 	if maze.check(board):
 		victory.show()
+
+
+func _on_tips(left: int) -> void:
+	tips.text = "Tips left:\n%d" % left

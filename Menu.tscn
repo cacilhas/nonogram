@@ -1,0 +1,134 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://assets/itim.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Menu.gd" type="Script" id=2]
+
+[sub_resource type="DynamicFont" id=1]
+size = 84
+outline_size = 3
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 48
+font_data = ExtResource( 1 )
+
+[sub_resource type="InputEventAction" id=3]
+action = "ui_select_small_size"
+
+[sub_resource type="ShortCut" id=4]
+shortcut = SubResource( 3 )
+
+[sub_resource type="ButtonGroup" id=5]
+resource_name = "size"
+
+[sub_resource type="InputEventAction" id=6]
+action = "ui_select_medium_size"
+
+[sub_resource type="ShortCut" id=7]
+shortcut = SubResource( 6 )
+
+[sub_resource type="InputEventAction" id=8]
+action = "ui_select_large_size"
+
+[sub_resource type="ShortCut" id=9]
+shortcut = SubResource( 8 )
+
+[sub_resource type="DynamicFont" id=10]
+size = 32
+font_data = ExtResource( 1 )
+
+[sub_resource type="InputEventAction" id=11]
+action = "ui_accept"
+
+[sub_resource type="ShortCut" id=12]
+shortcut = SubResource( 11 )
+
+[node name="Menu" type="Control"]
+margin_right = 600.0
+margin_bottom = 600.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Title" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -190.5
+margin_right = 190.5
+margin_bottom = 101.0
+custom_fonts/font = SubResource( 1 )
+text = "Nonogram"
+
+[node name="Settings" type="GridContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -78.0
+margin_top = -91.0
+margin_right = 78.0
+margin_bottom = 91.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SmallSizeBox" type="CheckBox" parent="Settings"]
+margin_right = 156.0
+margin_bottom = 66.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0, 0, 0.25098, 1 )
+custom_colors/font_color_pressed = Color( 0.501961, 0.25098, 0, 1 )
+shortcut = SubResource( 4 )
+group = SubResource( 5 )
+text = "5x5"
+align = 1
+
+[node name="MediumSizeBox" type="CheckBox" parent="Settings"]
+margin_top = 70.0
+margin_right = 156.0
+margin_bottom = 136.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0, 0, 0.25098, 1 )
+custom_colors/font_color_pressed = Color( 0.501961, 0.25098, 0, 1 )
+shortcut = SubResource( 7 )
+group = SubResource( 5 )
+text = "10x10"
+align = 1
+
+[node name="LargeSizeBox" type="CheckBox" parent="Settings"]
+margin_top = 140.0
+margin_right = 156.0
+margin_bottom = 206.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0, 0, 0.25098, 1 )
+custom_colors/font_color_pressed = Color( 0.501961, 0.25098, 0, 1 )
+shortcut = SubResource( 9 )
+group = SubResource( 5 )
+text = "15x15"
+align = 1
+
+[node name="StartButton" type="Button" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -119.0
+margin_top = -80.0
+margin_right = 119.0
+margin_bottom = -35.0
+custom_fonts/font = SubResource( 10 )
+shortcut = SubResource( 12 )
+text = "Start New Game"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="toggled" from="Settings/SmallSizeBox" to="." method="_on_SmallSizeBox_toggled"]
+[connection signal="toggled" from="Settings/MediumSizeBox" to="." method="_on_MediumSizeBox_toggled"]
+[connection signal="toggled" from="Settings/LargeSizeBox" to="." method="_on_LargeSizeBox_toggled"]
+[connection signal="pressed" from="StartButton" to="." method="_on_StartButton_pressed"]

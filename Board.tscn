@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Board.gd" type="Script" id=1]
+
+[node name="Board" type="ColorRect"]
+margin_left = 100.0
+margin_top = 100.0
+margin_right = 600.0
+margin_bottom = 600.0
+mouse_default_cursor_shape = 13
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]

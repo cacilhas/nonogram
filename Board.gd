@@ -3,6 +3,7 @@ extends ColorRect
 signal done(board)
 
 var board := PoolByteArray()
+var tips := 3
 var maze: Maze
 
 onready var cell_size: float = 500.0 / Global.size
@@ -41,11 +42,10 @@ func _on_gui_input(event: InputEvent) -> void:
 			var button_index := mouse.button_index
 
 			if Input.is_key_pressed(KEY_CONTROL):
-				print("KEY_CONTROL")
 				button_index = KEY_RIGHT
 
-			elif Input.is_key_pressed(KEY_SHIFT):
-				print("KEY_SHIFT")
+			elif Input.is_key_pressed(KEY_SHIFT) and tips > 0:
+				tips -= 1
 				board[index] = 1 if maze.cell(position) == 1 else 2
 				call_deferred("update")
 				return

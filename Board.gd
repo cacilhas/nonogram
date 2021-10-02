@@ -17,20 +17,24 @@ func _ready() -> void:
 
 func _draw() -> void:
 	for y in Global.size:
-		draw_line(Vector2(0, y) * cell_size, Vector2(Global.size, y) * cell_size, Color.black, 2)
-	for x in Global.size:
-		draw_line(Vector2(x, 0) * cell_size, Vector2(x, Global.size) * cell_size, Color.black, 2)
-
-	for y in Global.size:
 		for x in Global.size:
 			var sx: float = x * cell_size
 			var sy: float = y * cell_size
 			match board[y * Global.size + x]:
 				1:
-					draw_rect(Rect2(Vector2(sx+1, sy+1), Vector2.ONE * (cell_size - 2)), Color.black, true)
+					draw_rect(Rect2(Vector2(sx, sy), Vector2.ONE * cell_size), Color.black, true)
 				2:
 					draw_line(Vector2(sx, sy), Vector2(sx+cell_size, sy+cell_size), Color.black, 2)
 					draw_line(Vector2(sx, sy+cell_size), Vector2(sx+cell_size, sy), Color.black, 2)
+				_:
+					var cur := int(x / 5) + int(y / 5)
+					if cur % 2 == 1:
+						draw_rect(Rect2(Vector2(sx, sy), Vector2.ONE * cell_size), Color("#dddddd"), true)
+
+	for y in Global.size:
+		draw_line(Vector2(0, y) * cell_size, Vector2(Global.size, y) * cell_size, Color.gray, 2)
+	for x in Global.size:
+		draw_line(Vector2(x, 0) * cell_size, Vector2(x, Global.size) * cell_size, Color.gray, 2)
 
 
 func _on_gui_input(event: InputEvent) -> void:

@@ -52,6 +52,7 @@ func _on_gui_input(event: InputEvent) -> void:
 			elif Input.is_key_pressed(KEY_SHIFT) and tips > 0:
 				tips -= 1
 				board[index] = 1 if maze.cell(position) == 1 else 2
+				_check(position)
 				emit_signal("tips", tips)
 				call_deferred("update")
 				return
@@ -60,9 +61,27 @@ func _on_gui_input(event: InputEvent) -> void:
 				return
 
 			board[index] = clamp(button_index, 1, 2) if board[index] == 0 else 0
+			_check(position)
 			call_deferred("update")
 
 	for index in Global.size * Global.size:
 		if board[index] == 0:
 			return
 	emit_signal("done", board)
+
+
+func _check(cell: Vector2) -> void:
+	var column := PoolByteArray()
+	var line := PoolByteArray()
+	for y in Global.size:
+		column.append(board[y * Global.size + cell.x] % 2)
+	for x in Global.size:
+		line.append(board[cell.y * Global.size + x] % 2)
+
+	if maze.check_column(cell.x, column):
+		for y in Global.size:
+			board[y * Global.size + cell.x] = 1 if maze.cell(Vector2(cell.x, y)) == 1 else 2
+
+	if maze.check_line(cell.y, line):
+		for x in Global.size:
+			board[cell.y * Global.size + x] = 1 if maze.cell(Vector2(x, cell.y)) == 1 else 2

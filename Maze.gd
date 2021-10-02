@@ -27,6 +27,20 @@ func check(board: PoolByteArray) -> bool:
 	return array_hash(board) == _hash
 
 
+func check_column(x: int, board: PoolByteArray) -> bool:
+	var line := PoolByteArray()
+	for y in size:
+		line.append(cell(Vector2(x, y)))
+	return array_hash(board) == array_hash(line)
+
+
+func check_line(y: int, board: PoolByteArray) -> bool:
+	var line := PoolByteArray()
+	for x in size:
+		line.append(cell(Vector2(x, y)))
+	return array_hash(board) == array_hash(line)
+
+
 func get_column(x: int) -> PoolByteArray:
 	var res := PoolByteArray()
 	var sum := 0

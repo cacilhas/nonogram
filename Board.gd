@@ -20,7 +20,7 @@ func _draw() -> void:
 		for x in Global.size:
 			var sx: float = x * cell_size
 			var sy: float = y * cell_size
-			var bg := Color("#dddddd") if (int(x / 5) + int(y / 2)) % 2 == 1 else Color.white
+			var bg := Color("#dddddd") if (int(x / 5) + int(y / 5)) % 2 == 1 else Color.white
 
 			match board[y * Global.size + x]:
 				1:

@@ -20,16 +20,17 @@ func _draw() -> void:
 		for x in Global.size:
 			var sx: float = x * cell_size
 			var sy: float = y * cell_size
+			var bg := Color("#dddddd") if (int(x / 5) + int(y / 2)) % 2 == 1 else Color.white
+
 			match board[y * Global.size + x]:
 				1:
 					draw_rect(Rect2(Vector2(sx, sy), Vector2.ONE * cell_size), Color.black, true)
 				2:
+					draw_rect(Rect2(Vector2(sx, sy), Vector2.ONE * cell_size), bg, true)
 					draw_line(Vector2(sx, sy), Vector2(sx+cell_size, sy+cell_size), Color.black, 2)
 					draw_line(Vector2(sx, sy+cell_size), Vector2(sx+cell_size, sy), Color.black, 2)
 				_:
-					var cur := int(x / 5) + int(y / 5)
-					if cur % 2 == 1:
-						draw_rect(Rect2(Vector2(sx, sy), Vector2.ONE * cell_size), Color("#dddddd"), true)
+					draw_rect(Rect2(Vector2(sx, sy), Vector2.ONE * cell_size), bg, true)
 
 	for y in Global.size:
 		draw_line(Vector2(0, y) * cell_size, Vector2(Global.size, y) * cell_size, Color.gray, 2)

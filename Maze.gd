@@ -13,8 +13,6 @@ func build() -> void:
 	for _i in size*size:
 		# TODO: use a better maze algorithm
 		_data.append(0 if randi() % 3 == 0 else 1)
-	for y in size:
-		print(_data.slice(y*size, y*size + size - 1))
 
 
 func cell(position: Vector2) -> int:

@@ -11,6 +11,7 @@ onready var victory: Label = $Victory/Label
 
 func _ready() -> void:
 	maze.build()
+	board.maze = maze
 	cell_size = 500 / Global.size
 
 	for y in Global.size:

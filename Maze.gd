@@ -13,13 +13,13 @@ func _init(size_: int).() -> void:
 func build() -> void:
 	_data = PoolByteArray()
 	for _i in size*size:
-		_data.append(randi() % 2)  # TODO: use a maze algorithm
+		_data.append(randi() % 2)  # TODO: use a better maze algorithm
 	_hash = array_hash(_data)
 
 
-func cell(x: int, y: int) -> int:
-	x %= size
-	y %= size
+func cell(position: Vector2) -> int:
+	var x: int = int(position.x) % size
+	var y: int = int(position.y) % size
 	return _data[y * size + x]
 
 
@@ -31,7 +31,7 @@ func get_column(x: int) -> PoolByteArray:
 	var res := PoolByteArray()
 	var sum := 0
 	for y in size:
-		var cur := cell(x, y)
+		var cur := cell(Vector2(x, y))
 		if cur == 0 and sum > 0:
 			res.append(sum)
 			sum = 0
@@ -53,7 +53,7 @@ func get_line(y: int) -> PoolByteArray:
 	var res := PoolByteArray()
 	var sum := 0
 	for x in size:
-		var cur := cell(x, y)
+		var cur := cell(Vector2(x, y))
 		if cur == 0 and sum > 0:
 			res.append(sum)
 			sum = 0

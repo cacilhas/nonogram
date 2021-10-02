@@ -5,12 +5,14 @@ export var Maze: Script
 var cell_size: float
 
 onready var board: ColorRect = $Board
+onready var help: WindowDialog = Global.help.duplicate()
 onready var maze: Maze = Maze.new(Global.size)
 onready var tips: Label = $Tips/Label
 onready var victory: Label = $Victory/Label
 
 
 func _ready() -> void:
+	add_child(help)
 	maze.build()
 	board.maze = maze
 	cell_size = 500 / Global.size
@@ -47,6 +49,8 @@ func _ready() -> void:
 
 
 func _input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("ui_help"):
+		help.popup()
 	if Input.is_action_just_pressed("ui_cancel"):
 		get_tree().change_scene("res://Menu.tscn")
 

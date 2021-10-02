@@ -6,6 +6,7 @@ const STORAGE = "user://settings.data"
 var size := 5
 var version := 1
 
+onready var help: WindowDialog = $Help
 onready var label_template: Label = $LabelTemplate
 
 

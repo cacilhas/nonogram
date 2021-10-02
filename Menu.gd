@@ -1,11 +1,13 @@
 extends Control
 
+onready var help: WindowDialog = Global.help.duplicate()
 onready var small_size_box = $Settings/SmallSizeBox
 onready var medium_size_box = $Settings/MediumSizeBox
 onready var large_size_box = $Settings/LargeSizeBox
 
 
 func _ready() -> void:
+	add_child(help)
 	match Global.size:
 		10:
 			medium_size_box.pressed = true
@@ -18,6 +20,8 @@ func _ready() -> void:
 
 
 func _input(_event: InputEvent) -> void:
+	if Input.is_action_just_pressed("ui_help"):
+		help.popup()
 	if Input.is_action_just_pressed("ui_cancel"):
 		Global.save()
 		get_tree().quit()

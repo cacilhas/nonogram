@@ -3,7 +3,7 @@ extends ColorRect
 signal done(board)
 signal tips(count)
 
-var board := PoolByteArray()
+var board := []
 var tips := 3
 var maze: Maze
 
@@ -77,17 +77,12 @@ func lock(position: Vector2) -> void:
 
 
 func _check(cell: Vector2) -> void:
-	var column := PoolByteArray()
-	var line := PoolByteArray()
-	for y in Global.size:
-		column.append(board[y * Global.size + cell.x] % 2)
-	for x in Global.size:
-		line.append(board[cell.y * Global.size + x] % 2)
+	var size := Global.size
 
-	if maze.check_column(cell.x, column):
-		for y in Global.size:
-			board[y * Global.size + cell.x] = 1 if maze.cell(Vector2(cell.x, y)) == 1 else 2
+	if maze.check_column(cell.x, board):
+		for y in size:
+			Utils.set_cell(board, Vector2(cell.x, y), 1 if maze.cell(Vector2(cell.x, y)) == 1 else 2)
 
-	if maze.check_line(cell.y, line):
-		for x in Global.size:
-			board[cell.y * Global.size + x] = 1 if maze.cell(Vector2(x, cell.y)) == 1 else 2
+	if maze.check_line(cell.y, board):
+		for x in size:
+			Utils.set_cell(board, Vector2(x, cell.y), 1 if maze.cell(Vector2(x, cell.y)) == 1 else 2)

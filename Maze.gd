@@ -2,8 +2,7 @@ class_name Maze
 extends Object
 
 var size: int
-var _data: PoolByteArray
-var _hash: String
+var _data := []
 
 
 func _init(size_: int).() -> void:
@@ -11,91 +10,62 @@ func _init(size_: int).() -> void:
 
 
 func build() -> void:
-	_data = PoolByteArray()
 	for _i in size*size:
-		_data.append(0 if randi() % 3 == 0 else 1)  # TODO: use a better maze algorithm
-	_hash = array_hash(_data)
+		# TODO: use a better maze algorithm
+		_data.append(0 if randi() % 3 == 0 else 1)
+	for y in size:
+		print(_data.slice(y*size, y*size + size - 1))
 
 
 func cell(position: Vector2) -> int:
-	var x: int = int(position.x) % size
-	var y: int = int(position.y) % size
-	return _data[y * size + x]
+	return Utils.get_cell(_data, position)
 
 
-func check(board: PoolByteArray) -> bool:
-	return array_hash(board) == _hash
-
-
-func check_column(x: int, board: PoolByteArray) -> bool:
-	var line := PoolByteArray()
+func check(board: Array) -> bool:
 	for y in size:
-		line.append(cell(Vector2(x, y)))
-	return array_hash(board) == array_hash(line)
+		if not check_line(y, board):
+			return false
 
-
-func check_line(y: int, board: PoolByteArray) -> bool:
-	var line := PoolByteArray()
 	for x in size:
-		line.append(cell(Vector2(x, y)))
-	return array_hash(board) == array_hash(line)
+		if not check_column(x, board):
+			return false
+
+	return true
 
 
-func get_column(x: int) -> PoolByteArray:
-	var res := PoolByteArray()
-	var sum := 0
-	for y in size:
-		var cur := cell(Vector2(x, y))
-		if cur == 0 and sum > 0:
-			res.append(sum)
-			sum = 0
-		elif cur == 1:
-			sum += 1
-	if sum > 0:
-		res.append(sum)
-	return res
+func check_column(x: int, board: Array) -> bool:
+	return Utils.column_eq(x, board, _data)
 
 
-func get_column_strings(x: int) -> PoolStringArray:
+func check_line(y: int, board: Array) -> bool:
+	return Utils.line_eq(y, board, _data)
+
+
+func get_column_string(x: int) -> String:
 	var res := PoolStringArray()
-	for value in get_column(x):
-		res.append(String(value))
-	return res
+	var cur := 0
+	for value in Utils.get_column(x, _data):
+		if value == 0 and cur > 0:
+			res.append(String(cur))
+			cur = 0
+		else:
+			cur += value
+	if cur > 0:
+		res.append(String(cur))
+	var text := res.join("\n")
+	return "0" if text == "" else text
 
 
-func get_line(y: int) -> PoolByteArray:
-	var res := PoolByteArray()
-	var sum := 0
-	for x in size:
-		var cur := cell(Vector2(x, y))
-		if cur == 0 and sum > 0:
-			res.append(sum)
-			sum = 0
-		elif cur == 1:
-			sum += 1
-	if sum > 0:
-		res.append(sum)
-	return res
-
-
-func get_line_strings(x: int) -> PoolStringArray:
+func get_line_string(y: int) -> String:
 	var res := PoolStringArray()
-	for value in get_line(x):
-		res.append(String(value))
-	return res
-
-
-static func array_hash(array: PoolByteArray) -> String:
-	var res := PoolByteArray()
-	var sum := 0
-	var index := 0
-	for value in array:
-		sum |= (value % 2) << index
-		index += 1
-		if index == 8:
-			res.append(sum)
-			sum = 0
-			index = 0
-	if sum > 0:
-		res.append(sum)
-	return res.get_string_from_ascii()
+	var cur := 0
+	for value in Utils.get_line(y, _data):
+		if value == 0 and cur > 0:
+			res.append(String(cur))
+			cur = 0
+		else:
+			cur += value
+	if cur > 0:
+		res.append(String(cur))
+	var text := res.join(" ")
+	return "0" if text == "" else text

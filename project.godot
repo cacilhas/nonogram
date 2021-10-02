@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Maze",
 "language": "GDScript",
 "path": "res://Maze.gd"
+}, {
+"base": "Object",
+"class": "Utils",
+"language": "GDScript",
+"path": "res://Utils.gd"
 } ]
 _global_script_class_icons={
-"Maze": ""
+"Maze": "",
+"Utils": ""
 }
 
 [application]

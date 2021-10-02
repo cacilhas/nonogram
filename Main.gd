@@ -19,9 +19,7 @@ func _ready() -> void:
 
 	for y in Global.size:
 		var label: Label = Global.label_template.duplicate()
-		var text: String = maze.get_line_strings(y).join(" ")
-		if text == "":
-			text = "0"
+		var text: String = maze.get_line_string(y)
 		label.text = text
 		label.align = Label.ALIGN_RIGHT
 		label.rect_position = Vector2(5, y * cell_size + 100)
@@ -34,9 +32,7 @@ func _ready() -> void:
 
 	for x in Global.size:
 		var label: Label = Global.label_template.duplicate()
-		var text: String = maze.get_column_strings(x).join("\n")
-		if text == "":
-			text = "0"
+		var text: String = maze.get_column_string(x)
 		label.text = text
 		label.align = Label.ALIGN_CENTER
 		label.rect_position = Vector2(x * cell_size + 100, 5)
@@ -67,7 +63,7 @@ func _input(_event: InputEvent) -> void:
 			get_tree().change_scene("res://Menu.tscn")
 
 
-func _on_done(board: PoolByteArray) -> void:
+func _on_done(board: Array) -> void:
 	if maze.check(board):
 		victory.show()
 

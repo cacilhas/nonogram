@@ -23,8 +23,11 @@ func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("ui_help"):
 		help.popup()
 	if Input.is_action_just_pressed("ui_cancel"):
-		Global.save()
-		get_tree().quit()
+		if help.visible:
+			help.hide()
+		else:
+			Global.save()
+			get_tree().quit()
 
 
 func _on_SmallSizeBox_toggled(button_pressed: bool) -> void:

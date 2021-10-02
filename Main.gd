@@ -52,7 +52,11 @@ func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("ui_help"):
 		help.popup()
 	if Input.is_action_just_pressed("ui_cancel"):
-		get_tree().change_scene("res://Menu.tscn")
+		if help.visible:
+			help.hide()
+		else:
+			Global.save()
+			get_tree().change_scene("res://Menu.tscn")
 
 
 func _on_done(board: PoolByteArray) -> void:

@@ -1,22 +1,20 @@
 extends Control
 
 onready var help: WindowDialog = Global.help.duplicate()
-onready var small_size_box = $Settings/SmallSizeBox
-onready var medium_size_box = $Settings/MediumSizeBox
-onready var large_size_box = $Settings/LargeSizeBox
 
 
 func _ready() -> void:
 	add_child(help)
+	$Settings/EasyBox.pressed = Global.easy
 	match Global.size:
 		10:
-			medium_size_box.pressed = true
+			$Settings/MediumSizeBox.pressed = true
 
 		15:
-			large_size_box.pressed = true
+			$Settings/LargeSizeBox.pressed = true
 
 		_:
-			small_size_box.pressed = true
+			$Settings/SmallSizeBox.pressed = true
 
 
 func _input(_event: InputEvent) -> void:
@@ -28,6 +26,10 @@ func _input(_event: InputEvent) -> void:
 		else:
 			Global.save()
 			get_tree().quit()
+
+
+func _on_EasyBox_toggled(button_pressed: bool) -> void:
+	Global.easy = button_pressed
 
 
 func _on_SmallSizeBox_toggled(button_pressed: bool) -> void:

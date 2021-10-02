@@ -47,6 +47,14 @@ func _ready() -> void:
 		add_child(label)
 		label.show()
 
+	if Global.easy:
+		for y in Global.size:
+			for x in Global.size:
+				var position := Vector2(x, y)
+				if maze.cell(position) == 0 and randi() % 2 == 1:
+					board.lock(position)
+
+
 
 func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("ui_help"):

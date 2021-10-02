@@ -3,8 +3,9 @@ extends Node
 const BUFFER_SIZE = 4096
 const STORAGE = "user://settings.data"
 
+var easy := false
 var size := 5
-var version := 1
+var version := 2
 
 onready var help: WindowDialog = $Help
 onready var label_template: Label = $LabelTemplate
@@ -22,8 +23,8 @@ func load_settings() -> void:
 		var res: Dictionary = bytes2var(file.get_buffer(BUFFER_SIZE))
 		file.close()
 		if res and res.version == version:
-			var aux = dict2inst(res)
-			size = aux.size
+			size = res.get("size", 5)
+			easy = res.get("easy", false)
 
 
 func save() -> void:

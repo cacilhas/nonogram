@@ -43,6 +43,7 @@ func _on_gui_input(event: InputEvent) -> void:
 	if mouse and mouse.pressed:
 		var position := (get_viewport().get_mouse_position() - Vector2.ONE * 100) / cell_size
 		position = Vector2(int(position.x), int(position.y))
+
 		if position.x >= 0 and position.x < Global.size and position.y >= 0 and position.y < Global.size:
 			var index: int = position.y * Global.size + position.x
 			var button_index := mouse.button_index
@@ -69,6 +70,10 @@ func _on_gui_input(event: InputEvent) -> void:
 		if board[index] == 0:
 			return
 	emit_signal("done", board)
+
+
+func lock(position: Vector2) -> void:
+	board[position.y * Global.size + position.x] = 2
 
 
 func _check(cell: Vector2) -> void:

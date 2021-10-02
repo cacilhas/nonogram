@@ -13,7 +13,7 @@ func _init(size_: int).() -> void:
 func build() -> void:
 	_data = PoolByteArray()
 	for _i in size*size:
-		_data.append(randi() % 2)  # TODO: use a better maze algorithm
+		_data.append(0 if randi() % 3 == 0 else 1)  # TODO: use a better maze algorithm
 	_hash = array_hash(_data)
 
 

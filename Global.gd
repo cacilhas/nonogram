@@ -28,7 +28,7 @@ func load_settings() -> void:
 
 
 func save() -> void:
-	var file = File.new()
+	var file := File.new()
 	var res := inst2dict(self)
 	file.open(STORAGE, File.WRITE)
 	file.store_buffer(var2bytes(res))

@@ -20,6 +20,8 @@ func readSettings() {
 			panic(err)
 		}
 	}
+	viper.Set("homepage", "https://cacilhas.itch.io/nonogram")
+	viper.Set("version", "2.2")
 }
 
 func defaultSettings() {

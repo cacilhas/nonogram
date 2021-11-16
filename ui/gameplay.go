@@ -14,7 +14,6 @@ type gameplay struct {
 }
 
 func NewGameplay() Scene {
-	raylib.SetExitKey(0)
 	size := viper.GetInt("size")
 	checked := 2. / 3.
 	revealed := 0.0
@@ -26,9 +25,17 @@ func NewGameplay() Scene {
 	}
 }
 
+func (gp *gameplay) Init() Scene {
+	raylib.SetExitKey(0)
+	return gp
+}
+
 func (gp *gameplay) Render() Scene {
 	if raylib.IsKeyPressed(raylib.KeyEscape) {
-		return NewMenu()
+		return NewMenu().Init()
+	}
+	if raylib.IsKeyPressed(raylib.KeyF1) {
+		return NewHelpPage(gp).Init()
 	}
 
 	round := gp.game.Round()
@@ -150,6 +157,7 @@ func checkClick(game nonogram.Game, cellSize int) {
 				round.Set(x, y, nonogram.CellUnknown)
 			case nonogram.CellUnknown:
 				round.Set(x, y, nonogram.CellUnset)
+				game.Check(x, y)
 			default:
 			}
 		}

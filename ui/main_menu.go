@@ -10,11 +10,19 @@ type mainMenu struct {
 }
 
 func NewMenu() Scene {
-	raylib.SetExitKey(raylib.KeyEscape)
 	return &mainMenu{}
 }
 
+func (m *mainMenu) Init() Scene {
+	raylib.SetExitKey(raylib.KeyEscape)
+	return m
+}
+
 func (m *mainMenu) Render() Scene {
+	if raylib.IsKeyPressed(raylib.KeyF1) {
+		return NewHelpPage(m).Init()
+	}
+
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, 120)
 	raygui.Label(
 		raylib.Rectangle{X: 214, Y: 30, Width: 772, Height: 114},
@@ -70,15 +78,17 @@ func (m *mainMenu) Render() Scene {
 
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, 84)
 	if raygui.Button(
-		raylib.Rectangle{X: 400, Y: 774, Width: 400, Height: 90},
+		raylib.Rectangle{X: 400, Y: 774, Width: 400, Height: 100},
 		"Play",
-	) {
-		return NewGameplay()
+	) || raylib.IsKeyPressed(raylib.KeyEnter) || raylib.IsKeyPressed(raylib.KeyKpEnter) {
+		return NewGameplay().Init()
 	}
 
-	if raylib.IsKeyPressed(raylib.KeyEnter) || raylib.IsKeyPressed(raylib.KeyKpEnter) {
-		return NewGameplay()
-	}
+	raygui.SetStyleProperty(raygui.GlobalTextFontsize, 10)
+	raygui.Label(
+		raylib.Rectangle{X: 1100, Y: 880, Width: 72, Height: 10},
+		"F1 for help",
+	)
 
 	return m
 }

@@ -22,6 +22,8 @@ func main() {
 		viper.GetInt32("height"),
 		"Nonogram",
 	)
+	raylib.SetWindowMinSize(800, 600)
+	raylib.SetWindowState(raylib.FlagWindowResizable)
 	raylib.SetTargetFPS(24)
 
 	ui.Mainloop()

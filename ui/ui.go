@@ -4,6 +4,7 @@ import (
 	"time"
 
 	raylib "github.com/gen2brain/raylib-go/raylib"
+	"github.com/spf13/viper"
 )
 
 func Mainloop() {
@@ -11,6 +12,11 @@ func Mainloop() {
 
 	// TODO: disable ESC key
 	for !raylib.WindowShouldClose() {
+		if raylib.IsWindowResized() {
+			viper.Set("width", raylib.GetScreenWidth())
+			viper.Set("height", raylib.GetScreenHeight())
+		}
+
 		raylib.BeginDrawing()
 		raylib.ClearBackground(raylib.RayWhite)
 

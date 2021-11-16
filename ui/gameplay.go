@@ -132,6 +132,11 @@ func drawLines(reference nonogram.Board, size, cellSize int32, offset offsetT) {
 	if large < 10 {
 		large = 10
 	}
+	width := float32(200)
+	if width > float32(offset.x) {
+		width = float32(offset.x)
+	}
+	x := float32(offset.x) - width
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, int64(large-2))
 	for y := int32(0); y < size; y++ {
 		current := reference.Line(y)
@@ -140,9 +145,9 @@ func drawLines(reference nonogram.Board, size, cellSize int32, offset offsetT) {
 			line = fmt.Sprintf("%s  %d", line, value)
 		}
 		rect := raylib.Rectangle{
-			X:      0,
+			X:      x,
 			Y:      float32(y*cellSize + offset.y),
-			Width:  float32(offset.x),
+			Width:  width,
 			Height: float32(cellSize),
 		}
 		raygui.Label(rect, strings.TrimSpace(line))

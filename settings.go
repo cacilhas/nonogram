@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/cacilhas/nonogram/ui"
 	"github.com/spf13/viper"
 )
 
@@ -14,19 +15,32 @@ func readSettings() {
 	viper.AddConfigPath(path.Join(os.Getenv("HOME"), ".config"))
 
 	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
-			defaultSettings()
-		} else {
+		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
 			panic(err)
 		}
 	}
+	defaultSettings()
 	viper.Set("homepage", "https://cacilhas.itch.io/nonogram")
-	viper.Set("version", "2.3")
+	viper.Set("version", "2.4")
 }
 
 func defaultSettings() {
-	viper.Set("size", 10)
-	viper.Set("easy", false)
+	if !viper.IsSet("size") {
+		viper.Set("size", 10)
+	}
+	if !viper.IsSet("easy") {
+		viper.Set("easy", false)
+	}
+	_, width := ui.GetResolution()
+	if viper.GetInt("width") == 0 {
+		viper.Set("width", width)
+	}
+	if viper.GetInt("height") == 0 {
+		viper.Set("height", width)
+	}
+	if !viper.IsSet("fullscreen") {
+		viper.Set("fullscreen", false)
+	}
 }
 
 func saveSettings() {

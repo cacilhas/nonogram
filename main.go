@@ -6,6 +6,7 @@ import (
 
 	"github.com/cacilhas/nonogram/ui"
 	raylib "github.com/gen2brain/raylib-go/raylib"
+	"github.com/spf13/viper"
 )
 
 func init() {
@@ -16,7 +17,11 @@ func main() {
 	readSettings()
 	defer saveSettings()
 
-	raylib.InitWindow(1200, 900, "Nonogram")
+	raylib.InitWindow(
+		viper.GetInt32("width"),
+		viper.GetInt32("height"),
+		"Nonogram",
+	)
 	raylib.SetTargetFPS(24)
 
 	ui.Mainloop()

@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/cacilhas/nonogram/nonogram"
 	raygui "github.com/gen2brain/raylib-go/raygui"
@@ -135,15 +136,17 @@ func drawLines(reference nonogram.Board, size, cellSize int, offset offsetT) {
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, int64(large-2))
 	for y := 0; y < size; y++ {
 		current := reference.Line(y)
-		for x, value := range current {
-			rect := raylib.Rectangle{
-				X:      float32(x * large),
-				Y:      float32(y*cellSize + int(offset.y)),
-				Width:  float32(offset.x),
-				Height: float32(cellSize),
-			}
-			raygui.Label(rect, fmt.Sprintf("%d", value))
+		line := ""
+		for _, value := range current {
+			line = fmt.Sprintf("%s  %d", line, value)
 		}
+		rect := raylib.Rectangle{
+			X:      0,
+			Y:      float32(y*cellSize + int(offset.y)),
+			Width:  float32(offset.x),
+			Height: float32(cellSize),
+		}
+		raygui.Label(rect, strings.TrimSpace(line))
 	}
 }
 

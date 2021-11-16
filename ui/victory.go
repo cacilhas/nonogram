@@ -33,21 +33,18 @@ func renderVictory() {
 	base := raylib.Vector3{X: 0, Y: -5, Z: 0}
 	vert1 := raylib.Vector3{X: 0, Y: 5, Z: -4}
 	vert2 := raylib.Vector3{X: 0, Y: 5, Z: 4}
-	C.DrawCylinderEx(
-		*(*C.Vector3)(unsafe.Pointer(&base)),
-		*(*C.Vector3)(unsafe.Pointer(&vert1)),
-		(C.float)(0.25),
-		(C.float)(0.25),
-		(C.int)(8),
-		*(*C.Color)(unsafe.Pointer(&raylib.Green)),
-	)
-	C.DrawCylinderEx(
-		*(*C.Vector3)(unsafe.Pointer(&base)),
-		*(*C.Vector3)(unsafe.Pointer(&vert2)),
-		(C.float)(0.25),
-		(C.float)(0.25),
-		(C.int)(8),
-		*(*C.Color)(unsafe.Pointer(&raylib.Green)),
-	)
+	drawCylindexEx(base, vert1, 0.25, 0.25, 8, raylib.Green)
+	drawCylindexEx(base, vert2, 0.25, 0.25, 8, raylib.Green)
 	raylib.EndMode3D()
+}
+
+func drawCylindexEx(startPos, endPos raylib.Vector3, radiusTop, radiusBottom float32, slices int32, color raylib.Color) {
+	C.DrawCylinderEx(
+		*(*C.Vector3)(unsafe.Pointer(&startPos)),
+		*(*C.Vector3)(unsafe.Pointer(&endPos)),
+		(C.float)(radiusTop),
+		(C.float)(radiusBottom),
+		(C.int)(slices),
+		*(*C.Color)(unsafe.Pointer(&color)),
+	)
 }

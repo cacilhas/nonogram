@@ -43,11 +43,10 @@ func (gp *gameplay) Render() Scene {
 		return NewHelpPage(gp).Init()
 	}
 
-	width := viper.GetInt32("width")
-	height := viper.GetInt32("height")
-	smaller := width
-	if height < smaller {
-		smaller = height
+	width, height := getSize()
+	smaller := height
+	if width < smaller {
+		smaller = width
 	}
 	boardSize := int32(float32(smaller) / 1.2)
 	if boardSize > 750 {

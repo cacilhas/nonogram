@@ -34,8 +34,7 @@ func (hp *helpPage) Render() Scene {
 		return hp.previous.Init()
 	}
 
-	width := viper.GetInt("width")
-	height := viper.GetInt("height")
+	width, height := getSize()
 	widthThird := float32(width) / 3
 	bigFontSize := int64(float32(height) / 7.5)
 	if bigFontSize > 120 {

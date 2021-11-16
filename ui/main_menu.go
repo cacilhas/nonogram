@@ -23,8 +23,7 @@ func (m *mainMenu) Render() Scene {
 		return NewHelpPage(m).Init()
 	}
 
-	width := viper.GetInt("width")
-	height := viper.GetInt("height")
+	width, height := getSize()
 	bigFontSize := int64(float32(height) / 7.5)
 	if bigFontSize > 120 {
 		bigFontSize = 120

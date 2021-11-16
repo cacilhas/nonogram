@@ -66,7 +66,7 @@ func (gp *gameplay) Render() Scene {
 	drawGrid(round, size, cellSize, offset)
 
 	if gp.game.IsDone() {
-		raylib.DrawText("V", offset.x, offset.y, boardSize, raylib.Green)
+		renderVictory()
 	} else {
 		checkClick(gp.game, cellSize, offset)
 	}

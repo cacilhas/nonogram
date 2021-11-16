@@ -9,31 +9,36 @@ import (
 	raylib "github.com/gen2brain/raylib-go/raylib"
 )
 
+var fsWidth, fsHeight int32 = 0, 0
+
 func GetResolution() (int32, int32) {
 	width := int32(raylib.GetScreenWidth())
 	height := int32(raylib.GetScreenHeight())
 
 	if width == 0 || height == 0 {
-		width, height = getSysResolution()
+		width, height = GetSysResolution()
 	}
 
 	return width, height
 }
 
-func getSysResolution() (int32, int32) {
-	switch runtime.GOOS {
-	case "darwin":
-		return getSysResolution_darwin()
+func GetSysResolution() (int32, int32) {
+	if fsWidth == 0 || fsHeight == 0 {
+		switch runtime.GOOS {
+		case "darwin":
+			fsWidth, fsHeight = getSysResolution_darwin()
 
-	case "linux":
-		return getSysResolution_linux()
+		case "linux":
+			fsWidth, fsHeight = getSysResolution_linux()
 
-	case "windows":
-		return getSysResolution_windows()
+		case "windows":
+			fsWidth, fsHeight = getSysResolution_windows()
 
-	default:
-		return 0, 0
+		default:
+			fsWidth, fsHeight = 1138, 640 // default to 0.73M9
+		}
 	}
+	return fsWidth, fsHeight
 }
 
 func getSysResolution_darwin() (int32, int32) {

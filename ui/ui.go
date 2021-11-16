@@ -7,8 +7,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-var fsWidth, fsHeight int32
-
 func Mainloop() {
 	scene := NewMenu()
 
@@ -16,8 +14,11 @@ func Mainloop() {
 	for !raylib.WindowShouldClose() {
 		if viper.GetBool("fullscreen") && !raylib.IsWindowFullscreen() {
 			raylib.ToggleFullscreen()
+			raylib.SetWindowSize(viper.GetInt("width"), viper.GetInt("height"))
 		} else if !viper.GetBool("fullscreen") && raylib.IsWindowFullscreen() {
 			raylib.ToggleFullscreen()
+			width, height := GetSysResolution()
+			raylib.SetWindowSize(int(width), int(height))
 		}
 
 		if raylib.IsWindowResized() {
@@ -37,10 +38,7 @@ func Mainloop() {
 
 func getSize() (int32, int32) {
 	if raylib.IsWindowFullscreen() {
-		if fsWidth == 0 || fsHeight == 0 {
-			fsWidth, fsHeight = GetResolution()
-		}
-		return fsWidth, fsHeight
+		return GetSysResolution()
 	}
 	return viper.GetInt32("width"), viper.GetInt32("height")
 }

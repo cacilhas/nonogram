@@ -57,40 +57,34 @@ func (gp *gameplay) Render() Scene {
 }
 
 func drawGrid(round nonogram.Board, size, cellSize int) {
-	black := raylib.NewColor(0, 0, 0, 255)
+	black := raylib.Color{R: 0, G: 0, B: 0, A: 255}
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, int64(cellSize/2))
 	for y := 0; y < size; y++ {
 		for x := 0; x < size; x++ {
-			rect := raylib.Rectangle{
-				X:      float32(x*cellSize + 300),
-				Y:      float32(y*cellSize + 150),
-				Width:  float32(cellSize),
-				Height: float32(cellSize),
-			}
-			var text string
-			color := raylib.White
+			rect_x := int32(x*cellSize + 300)
+			rect_y := int32(y*cellSize + 150)
+			size := int32(cellSize)
+			raylib.DrawRectangle(rect_x, rect_y, size, size, black)
 
+			color := raylib.White
 			if ((x/5)+(y/5))%2 == 1 {
 				color = raylib.LightGray
 			}
 
-			switch round.Get(x, y) {
-			case nonogram.CellSet:
-				text = ""
+			cell := round.Get(x, y)
+			if cell.IsSet() {
 				color = raylib.DarkGray
-			case nonogram.CellUnset:
-				text = "X"
-			default:
-				text = ""
 			}
+			raylib.DrawRectangle(rect_x+2, rect_y+2, size-4, size-4, color)
+			if cell.IsUnset() {
+				raylib.DrawLine(rect_x, rect_y, rect_x+size, rect_y+size, black)
+				raylib.DrawLine(rect_x+1, rect_y, rect_x+size, rect_y+size-1, black)
+				raylib.DrawLine(rect_x, rect_y+1, rect_x+size-1, rect_y+size, black)
 
-			raygui.LabelEx(
-				rect,
-				text,
-				black,
-				black,
-				color,
-			)
+				raylib.DrawLine(rect_x, rect_y+size, rect_x+size, rect_y, black)
+				raylib.DrawLine(rect_x+1, rect_y+size, rect_x+size, rect_y+1, black)
+				raylib.DrawLine(rect_x, rect_y+size-1, rect_x+size-1, rect_y, black)
+			}
 		}
 	}
 }

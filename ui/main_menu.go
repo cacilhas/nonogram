@@ -31,16 +31,15 @@ func (m *mainMenu) Render() Scene {
 	}
 	menuFontSize := int64(float32(height) / 12.5)
 	helpFontSize := int64(float32(height) / 80)
+	if helpFontSize < 10 {
+		helpFontSize = 10
+	}
 	boxSize := float32(height) / 15
 	buttonFontSize := int64(float32(height) / 10)
 	boxX := float32(width) / 3.5
 	boxY := float32(height) / 3.85
 	textSize := float32(menuFontSize) * 5
 	textX := boxX + float32(menuFontSize)*1.22
-
-	if helpFontSize < 10 {
-		helpFontSize = 10
-	}
 
 	titleWidth := float32(bigFontSize) * 6.5
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, bigFontSize)

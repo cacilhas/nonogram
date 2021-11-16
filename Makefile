@@ -7,19 +7,31 @@ endif
 
 BUILD= go build
 MD= mkdir -p
-RM= rm -f
+RM= rm -rf
 TESTER= go test -timeout 30s
+ZIP= zip -r
+
+ifeq ($(UNAME), Windows_NT)
+PLATFORM= Windows
+TARGET= nonogram.exe
+else
+PLATFORM= $(shell go env GOOS | sed 's/^./\U&/')
+TARGET= nonogram.x86_64
+endif
 
 BINDIR= $(GOPATH)/bin
-TARGET= nonogram.x86_64
 SOURCE= $(wildcard *.go nonogram/*.go)
 TESTS= $(wildcard tests/*.go)
+ZIPFILE= Nonogram-$(PLATFORM).zip
 
 
 #-------------------------------------------------------------------------------
-.PHONY: clean install mrproper uninstall test
+.PHONY: clean install itch mrproper uninstall test
 
 all: $(TARGET)
+
+
+itch: $(ZIPFILE)
 
 
 $(TARGET): $(SOURCE)
@@ -30,8 +42,23 @@ $(BINDIR):
 	$(MD) $@
 
 
+$(PLATFORM):
+	$(MD) $@
+
+
+$(ZIPFILE): $(PLATFORM) $(PLATFORM)/$(TARGET)
+	$(ZIP) $@ $<
+
+
+$(PLATFORM)/$(TARGET): $(TARGET) $(PLATFORM)
+	$(INSTALL) $^
+ifdef USE_UPX
+	$(UPX) $@
+endif
+
+
 clean:
-	$(RM) $(TARGET)
+	$(RM) $(TARGET) $(PLATFORM) $(ZIPFILE)
 
 
 install: $(TARGET)

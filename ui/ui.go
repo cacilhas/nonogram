@@ -7,7 +7,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var fsWidth, fsHeight int
+var fsWidth, fsHeight int32
 
 func Mainloop() {
 	scene := NewMenu()
@@ -40,7 +40,7 @@ func getSize() (int32, int32) {
 		if fsWidth == 0 || fsHeight == 0 {
 			fsWidth, fsHeight = GetResolution()
 		}
-		return int32(fsWidth), int32(fsHeight)
+		return fsWidth, fsHeight
 	}
 	return viper.GetInt32("width"), viper.GetInt32("height")
 }

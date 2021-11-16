@@ -61,7 +61,7 @@ func (m *mainMenu) Render() Scene {
 			Width:  boxSize,
 			Height: boxSize,
 		},
-		viper.GetInt("size") == 5,
+		viper.GetInt32("size") == 5,
 	) {
 		viper.Set("size", 5)
 	}
@@ -84,7 +84,7 @@ func (m *mainMenu) Render() Scene {
 			Width:  boxSize,
 			Height: boxSize,
 		},
-		viper.GetInt("size") == 10,
+		viper.GetInt32("size") == 10,
 	) {
 		viper.Set("size", 10)
 	}
@@ -107,7 +107,7 @@ func (m *mainMenu) Render() Scene {
 			Width:  boxSize,
 			Height: boxSize,
 		},
-		viper.GetInt("size") == 15,
+		viper.GetInt32("size") == 15,
 	) {
 		viper.Set("size", 15)
 	}

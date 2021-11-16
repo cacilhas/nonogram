@@ -19,7 +19,7 @@ type offsetT struct {
 }
 
 func NewGameplay() Scene {
-	size := viper.GetInt("size")
+	size := viper.GetInt32("size")
 	checked := 2. / 3.
 	revealed := 0.0
 	if viper.GetBool("easy") {
@@ -49,8 +49,8 @@ func (gp *gameplay) Render() Scene {
 		smaller = width
 	}
 	boardSize := int32(float32(smaller) / 1.2)
-	if boardSize > 750 {
-		boardSize = 750
+	if boardSize > 900 {
+		boardSize = 900
 	}
 	offset := offsetT{
 		x: width - boardSize,
@@ -59,7 +59,7 @@ func (gp *gameplay) Render() Scene {
 	round := gp.game.Round()
 	reference := gp.game.Reference()
 	size := round.Size()
-	cellSize := int(boardSize) / size
+	cellSize := boardSize / size
 
 	drawColumns(reference, size, cellSize, offset)
 	drawLines(reference, size, cellSize, offset)
@@ -74,14 +74,14 @@ func (gp *gameplay) Render() Scene {
 	return gp
 }
 
-func drawGrid(round nonogram.Board, size, cellSize int, offset offsetT) {
+func drawGrid(round nonogram.Board, size, cellSize int32, offset offsetT) {
 	black := raylib.Color{R: 0, G: 0, B: 0, A: 255}
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, int64(cellSize/2))
-	for y := 0; y < size; y++ {
-		for x := 0; x < size; x++ {
-			rect_x := int32(x*cellSize) + offset.x
-			rect_y := int32(y*cellSize) + offset.y
-			size := int32(cellSize)
+	for y := int32(0); y < size; y++ {
+		for x := int32(0); x < size; x++ {
+			rect_x := x*cellSize + offset.x
+			rect_y := y*cellSize + offset.y
+			size := cellSize
 			raylib.DrawRectangle(rect_x, rect_y, size, size, black)
 
 			color := raylib.White
@@ -107,18 +107,18 @@ func drawGrid(round nonogram.Board, size, cellSize int, offset offsetT) {
 	}
 }
 
-func drawColumns(reference nonogram.Board, size, cellSize int, offset offsetT) {
+func drawColumns(reference nonogram.Board, size, cellSize int32, offset offsetT) {
 	large := cellSize / 3
 	if large < 10 {
 		large = 10
 	}
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, int64(large-2))
-	for x := 0; x < size; x++ {
+	for x := int32(0); x < size; x++ {
 		current := reference.Column(x)
 		for y, value := range current {
 			rect := raylib.Rectangle{
-				X:      float32(x*cellSize + int(offset.x)),
-				Y:      float32(y * large),
+				X:      float32(x*cellSize + offset.x),
+				Y:      float32(int32(y) * large),
 				Width:  float32(cellSize),
 				Height: float32(offset.y),
 			}
@@ -127,13 +127,13 @@ func drawColumns(reference nonogram.Board, size, cellSize int, offset offsetT) {
 	}
 }
 
-func drawLines(reference nonogram.Board, size, cellSize int, offset offsetT) {
+func drawLines(reference nonogram.Board, size, cellSize int32, offset offsetT) {
 	large := cellSize / 3
 	if large < 10 {
 		large = 10
 	}
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, int64(large-2))
-	for y := 0; y < size; y++ {
+	for y := int32(0); y < size; y++ {
 		current := reference.Line(y)
 		line := ""
 		for _, value := range current {
@@ -141,7 +141,7 @@ func drawLines(reference nonogram.Board, size, cellSize int, offset offsetT) {
 		}
 		rect := raylib.Rectangle{
 			X:      0,
-			Y:      float32(y*cellSize + int(offset.y)),
+			Y:      float32(y*cellSize + offset.y),
 			Width:  float32(offset.x),
 			Height: float32(cellSize),
 		}
@@ -149,13 +149,13 @@ func drawLines(reference nonogram.Board, size, cellSize int, offset offsetT) {
 	}
 }
 
-func checkClick(game nonogram.Game, cellSize int, offset offsetT) {
+func checkClick(game nonogram.Game, cellSize int32, offset offsetT) {
 	round := game.Round()
 	size := round.Size()
-	mx := int(raylib.GetMouseX())
-	my := int(raylib.GetMouseY())
-	x := (mx - int(offset.x)) / cellSize
-	y := (my - int(offset.y)) / cellSize
+	mx := raylib.GetMouseX()
+	my := raylib.GetMouseY()
+	x := (mx - offset.x) / cellSize
+	y := (my - offset.y) / cellSize
 
 	if x >= 0 && x < size && y >= 0 && y < size {
 		if raylib.IsMouseButtonPressed(raylib.MouseLeftButton) {

@@ -3,7 +3,7 @@ package nonogram
 import "math/rand"
 
 type Game interface {
-	Check(x, y int)
+	Check(x, y int32)
 	IsDone() bool
 	Reference() Board
 	Round() Board
@@ -13,14 +13,14 @@ type game struct {
 	reference, round Board
 }
 
-func NewGame(size int, checked, revealed float64) *game {
+func NewGame(size int32, checked, revealed float64) *game {
 	res := &game{
 		reference: NewRandomBoard(size, checked),
 		round:     NewBoard(size),
 	}
 	if revealed != 0.0 {
-		for y := 0; y < size; y++ {
-			for x := 0; x < size; x++ {
+		for y := int32(0); y < size; y++ {
+			for x := int32(0); x < size; x++ {
 				if res.reference.Get(x, y).IsUnset() && rand.Float64() < revealed {
 					res.round.Set(x, y, CellUnset)
 				}
@@ -30,7 +30,7 @@ func NewGame(size int, checked, revealed float64) *game {
 	return res
 }
 
-func (g *game) Check(x, y int) {
+func (g *game) Check(x, y int32) {
 	if g.reference.ColumnStr(x) == g.round.ColumnStr(x) {
 		g.round.RevealColumn(x)
 	}

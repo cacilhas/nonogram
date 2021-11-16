@@ -181,8 +181,8 @@ func TestGame(t *testing.T) {
 		reference := game.Reference()
 		round := game.Round()
 
-		for y := 0; y < 4; y++ {
-			for x := 0; x < 4; x++ {
+		for y := int32(0); y < 4; y++ {
+			for x := int32(0); x < 4; x++ {
 				round.Set(x, y, reference.Get(x, y))
 			}
 		}

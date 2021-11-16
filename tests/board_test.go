@@ -78,8 +78,8 @@ func TestBoard(t *testing.T) {
 	t.Run("set cell", func(t *testing.T) {
 		board := nonogram.NewBoard(2)
 		board.Set(1, 0, nonogram.CellSet)
-		for y := 0; y < 2; y++ {
-			for x := 0; x < 2; x++ {
+		for y := int32(0); y < 2; y++ {
+			for x := int32(0); x < 2; x++ {
 				if x == 1 && y == 0 {
 					if got := board.Get(x, y); !got.IsSet() {
 						t.Fatalf("expected set at [%v, %v], got %v", x, y, got)

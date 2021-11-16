@@ -121,12 +121,14 @@ func drawLines(reference nonogram.Board, size, cellSize int) {
 
 func checkClick(game nonogram.Game, cellSize int) {
 	round := game.Round()
+	size := round.Size()
+
 	if raylib.IsMouseButtonPressed(raylib.MouseLeftButton) {
 		mx := int(raylib.GetMouseX())
 		my := int(raylib.GetMouseY())
-		if mx > 300 && my > 150 {
-			x := (mx - 300) / cellSize
-			y := (my - 150) / cellSize
+		x := (mx - 300) / cellSize
+		y := (my - 150) / cellSize
+		if x >= 0 && x < size && y >= 0 && y < size {
 			switch round.Get(x, y) {
 			case nonogram.CellSet:
 				round.Set(x, y, nonogram.CellUnknown)
@@ -136,12 +138,13 @@ func checkClick(game nonogram.Game, cellSize int) {
 			default:
 			}
 		}
+
 	} else if raylib.IsMouseButtonPressed(raylib.MouseRightButton) {
 		mx := int(raylib.GetMouseX())
 		my := int(raylib.GetMouseY())
-		if mx > 300 && my > 300 {
-			x := (mx - 300) / cellSize
-			y := (my - 150) / cellSize
+		x := (mx - 300) / cellSize
+		y := (my - 150) / cellSize
+		if x >= 0 && x < size && y >= 0 && y < size {
 			switch round.Get(x, y) {
 			case nonogram.CellUnset:
 				round.Set(x, y, nonogram.CellUnknown)

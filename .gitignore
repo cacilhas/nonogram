@@ -1,6 +1,7 @@
 .*
-*.bak
 *~
+*.bak
+*.exe
 *.x86_64
 /vendor
 !/vendor/manifest

@@ -83,12 +83,17 @@ func drawGrid(round nonogram.Board, size, cellSize int32, offset offsetT) {
 			size := cellSize
 			raylib.DrawRectangle(rect_x, rect_y, size, size, raylib.Black)
 
-			color := raylib.White
+			cell := round.Get(x, y)
+			rest := uint8(255)
+			if cell.IsUnknown() {
+				rest = uint8(round.Percent(nonogram.CellUnknown)*64 + 192)
+			}
+			color := raylib.Color{R: 255, G: rest, B: rest, A: 255}
 			if ((x/5)+(y/5))%2 == 1 {
-				color = raylib.LightGray
+				rest = uint8(uint16(rest) * 200 / 256)
+				color = raylib.Color{R: 200, G: rest, B: rest, A: 255}
 			}
 
-			cell := round.Get(x, y)
 			if cell.IsSet() {
 				color = raylib.DarkGray
 			}

@@ -7,6 +7,8 @@ import (
 
 type Board interface {
 	Size() int32
+	Count(Cell) int
+	Percent(Cell) float32
 	Get(x, y int32) Cell
 	Set(x, y int32, cell Cell) error
 	Column(x int32) []uint8
@@ -28,6 +30,21 @@ func NewBoard(size int32) Board {
 		size: size,
 		data: make([]Cell, size*size),
 	}
+}
+
+func (b board) Count(cell Cell) int {
+	count := 0
+	for _, c := range b.data {
+		if c == cell {
+			count++
+		}
+	}
+	return count
+}
+
+func (b board) Percent(cell Cell) float32 {
+	count := b.Count(cell)
+	return float32(count) / float32(b.size*b.size)
 }
 
 func NewRandomBoard(size int32, checked float64) Board {

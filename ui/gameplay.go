@@ -75,14 +75,13 @@ func (gp *gameplay) Render() Scene {
 }
 
 func drawGrid(round nonogram.Board, size, cellSize int32, offset offsetT) {
-	black := raylib.Color{R: 0, G: 0, B: 0, A: 255}
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, int64(cellSize/2))
 	for y := int32(0); y < size; y++ {
 		for x := int32(0); x < size; x++ {
 			rect_x := x*cellSize + offset.x
 			rect_y := y*cellSize + offset.y
 			size := cellSize
-			raylib.DrawRectangle(rect_x, rect_y, size, size, black)
+			raylib.DrawRectangle(rect_x, rect_y, size, size, raylib.Black)
 
 			color := raylib.White
 			if ((x/5)+(y/5))%2 == 1 {
@@ -95,15 +94,21 @@ func drawGrid(round nonogram.Board, size, cellSize int32, offset offsetT) {
 			}
 			raylib.DrawRectangle(rect_x+2, rect_y+2, size-4, size-4, color)
 			if cell.IsUnset() {
-				raylib.DrawLine(rect_x, rect_y, rect_x+size, rect_y+size, black)
-				raylib.DrawLine(rect_x+1, rect_y, rect_x+size, rect_y+size-1, black)
-				raylib.DrawLine(rect_x, rect_y+1, rect_x+size-1, rect_y+size, black)
+				raylib.DrawLine(rect_x, rect_y, rect_x+size, rect_y+size, raylib.Black)
+				raylib.DrawLine(rect_x+1, rect_y, rect_x+size, rect_y+size-1, raylib.Black)
+				raylib.DrawLine(rect_x, rect_y+1, rect_x+size-1, rect_y+size, raylib.Black)
 
-				raylib.DrawLine(rect_x, rect_y+size, rect_x+size, rect_y, black)
-				raylib.DrawLine(rect_x+1, rect_y+size, rect_x+size, rect_y+1, black)
-				raylib.DrawLine(rect_x, rect_y+size-1, rect_x+size-1, rect_y, black)
+				raylib.DrawLine(rect_x, rect_y+size, rect_x+size, rect_y, raylib.Black)
+				raylib.DrawLine(rect_x+1, rect_y+size, rect_x+size, rect_y+1, raylib.Black)
+				raylib.DrawLine(rect_x, rect_y+size-1, rect_x+size-1, rect_y, raylib.Black)
 			}
 		}
+	}
+	for y := int32(0); y <= size; y += 5 {
+		raylib.DrawLine(offset.x, y*cellSize+offset.y, offset.x+cellSize*size, y*cellSize+offset.y, raylib.RayWhite)
+	}
+	for x := int32(0); x <= size; x += 5 {
+		raylib.DrawLine(x*cellSize+offset.x, offset.y, x*cellSize+offset.x, offset.y+cellSize*size, raylib.RayWhite)
 	}
 }
 

@@ -20,7 +20,7 @@ TARGET= nonogram.x86_64
 endif
 
 BINDIR= $(GOPATH)/bin
-SOURCE= $(wildcard *.go nonogram/*.go)
+SOURCE= $(wildcard *.go nonogram/*.go ui/*.go)
 TESTS= $(wildcard tests/*.go)
 ZIPFILE= Nonogram-$(PLATFORM).zip
 

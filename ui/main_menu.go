@@ -25,7 +25,7 @@ func (m *mainMenu) Render() Scene {
 
 	width, height := getSize()
 	// TODO: fix fullscreen
-	//renderResizer(width, height)
+	renderResizer(width, height)
 	bigFontSize := int64(float32(height) / 7.5)
 	if bigFontSize > 120 {
 		bigFontSize = 120

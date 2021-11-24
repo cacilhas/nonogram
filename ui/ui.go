@@ -12,18 +12,21 @@ func Mainloop() {
 
 	// TODO: disable ESC key
 	for !raylib.WindowShouldClose() {
-		if viper.GetBool("fullscreen") && !raylib.IsWindowFullscreen() {
+		fullscreen := raylib.IsWindowFullscreen()
+		shouldBeFullscreen := viper.GetBool("fullscreen")
+
+		if shouldBeFullscreen && !fullscreen {
 			raylib.ToggleFullscreen()
-			raylib.SetWindowSize(viper.GetInt("width"), viper.GetInt("height"))
-		} else if !viper.GetBool("fullscreen") && raylib.IsWindowFullscreen() {
+		} else if !shouldBeFullscreen && fullscreen {
 			raylib.ToggleFullscreen()
-			width, height := GetSysResolution()
-			raylib.SetWindowSize(int(width), int(height))
 		}
+		fullscreen = shouldBeFullscreen
 
 		if raylib.IsWindowResized() {
-			viper.Set("width", raylib.GetScreenWidth())
-			viper.Set("height", raylib.GetScreenHeight())
+			if !fullscreen {
+				viper.Set("width", raylib.GetScreenWidth())
+				viper.Set("height", raylib.GetScreenHeight())
+			}
 		}
 
 		raylib.BeginDrawing()
@@ -37,8 +40,7 @@ func Mainloop() {
 }
 
 func getSize() (int32, int32) {
-	if raylib.IsWindowFullscreen() {
-		return GetSysResolution()
-	}
-	return viper.GetInt32("width"), viper.GetInt32("height")
+	width := int32(raylib.GetScreenWidth())
+	height := int32(raylib.GetScreenHeight())
+	return width, height
 }

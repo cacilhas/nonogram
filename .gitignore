@@ -3,6 +3,7 @@
 *.bak
 *.exe
 *.x86_64
+*.zip
 /vendor
 !/vendor/manifest
 !.gitignore

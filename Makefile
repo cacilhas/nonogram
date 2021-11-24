@@ -26,7 +26,7 @@ ZIPFILE= Nonogram-$(PLATFORM).zip
 
 
 #-------------------------------------------------------------------------------
-.PHONY: clean install itch mrproper uninstall test
+.PHONY: clean install itch mrproper uninstall test zip
 
 all: $(TARGET)
 
@@ -74,3 +74,6 @@ uninstall:
 
 test: $(TESTS) $(SOURCE)
 	$(TESTER) $(TESTS)
+
+
+zip: $(ZIPFILE)

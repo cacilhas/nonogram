@@ -1,7 +1,7 @@
 package ui
 
 // #cgo darwin LDFLAGS: -lraylib -framework OpenGL -framework OpenAL -framework Cocoa
-// #cgo linux LDFLAGS: -lraylib -lGL -lpthread -lm -lXrandr -lraylib -lGL -lpthread -lm -lXrandr
+// #cgo linux LDFLAGS: -lraylib -lGL -lm -lpthread -lXrandr
 // #cgo windows LDFLAGS: -lraylib -lGL -lm -lpthread -ldl -lrt
 // #include <raylib.h>
 import "C"

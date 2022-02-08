@@ -61,9 +61,9 @@ func (gp *gameplay) Render() Scene {
 	size := round.Size()
 	cellSize := boardSize / size
 
-	drawColumns(reference, size, cellSize, offset)
 	drawLines(reference, size, cellSize, offset)
 	drawGrid(round, size, cellSize, offset)
+	drawColumns(reference, size, cellSize, offset)
 
 	if gp.game.IsDone() {
 		renderVictory()
@@ -132,7 +132,21 @@ func drawColumns(reference nonogram.Board, size, cellSize int32, offset offsetT)
 				Width:  float32(cellSize),
 				Height: float32(offset.y),
 			}
-			raygui.Label(rect, fmt.Sprintf("%d", value))
+			leftRect := raylib.Rectangle{
+				X:      rect.X - 1,
+				Y:      rect.Y - 1,
+				Width:  rect.Width,
+				Height: rect.Height,
+			}
+			rightRect := raylib.Rectangle{
+				X:      rect.X + 1,
+				Y:      rect.Y + 1,
+				Width:  rect.Width,
+				Height: rect.Height,
+			}
+			raygui.LabelEx(leftRect, fmt.Sprintf("%d", value), raylib.White, raylib.Color{255, 255, 255, 0}, raylib.Color{255, 255, 255, 0})
+			raygui.LabelEx(rightRect, fmt.Sprintf("%d", value), raylib.White, raylib.Color{255, 255, 255, 0}, raylib.Color{255, 255, 255, 0})
+			raygui.LabelEx(rect, fmt.Sprintf("%d", value), raylib.DarkGray, raylib.Color{255, 255, 255, 0}, raylib.Color{255, 255, 255, 0})
 		}
 	}
 }

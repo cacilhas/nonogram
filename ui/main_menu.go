@@ -22,11 +22,11 @@ func (menu *mainMenu) Init(frame *rayframe.RayFrame) {
 	menu.RayFrame = frame
 }
 
-func (menu *mainMenu) Background() color.RGBA {
+func (menu mainMenu) Background() color.RGBA {
 	return raylib.RayWhite
 }
 
-func (menu *mainMenu) Update(dt time.Duration) rayframe.Scene {
+func (menu mainMenu) Update(dt time.Duration) rayframe.Scene {
 	update(dt)
 	if raylib.IsKeyPressed(raylib.KeyF1) {
 		return NewHelpPage(menu)
@@ -34,7 +34,7 @@ func (menu *mainMenu) Update(dt time.Duration) rayframe.Scene {
 	return menu
 }
 
-func (menu *mainMenu) Render2D() rayframe.Scene {
+func (menu mainMenu) Render2D() rayframe.Scene {
 	width := menu.WindowSize.X
 	height := menu.WindowSize.Y
 	// TODO: fix fullscreen

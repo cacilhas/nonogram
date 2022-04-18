@@ -34,7 +34,7 @@ func NewGameplay() rayframe.Scene {
 	}
 }
 
-func (gp *gameplay) Background() color.RGBA {
+func (gp gameplay) Background() color.RGBA {
 	return raylib.RayWhite
 }
 
@@ -43,11 +43,11 @@ func (gp *gameplay) Init(frame *rayframe.RayFrame) {
 	raylib.SetExitKey(0)
 }
 
-func (gp *gameplay) ExitKey() int32 {
+func (gp gameplay) ExitKey() int32 {
 	return 0
 }
 
-func (gp *gameplay) OnKeyEscape() rayframe.Scene {
+func (gp gameplay) OnKeyEscape() rayframe.Scene {
 	return NewMenu()
 }
 

@@ -32,24 +32,24 @@ func (help *helpPage) Init(frame *rayframe.RayFrame) {
 	help.RayFrame = frame
 }
 
-func (help *helpPage) ExitKey() int32 {
+func (help helpPage) ExitKey() int32 {
 	return 0
 }
 
-func (help *helpPage) OnKeyEscape() rayframe.Scene {
+func (help helpPage) OnKeyEscape() rayframe.Scene {
 	return help.previous
 }
 
-func (help *helpPage) Background() color.RGBA {
+func (help helpPage) Background() color.RGBA {
 	return raylib.RayWhite
 }
 
-func (help *helpPage) Update(dt time.Duration) rayframe.Scene {
+func (help helpPage) Update(dt time.Duration) rayframe.Scene {
 	update(dt)
 	return help
 }
 
-func (help *helpPage) Render2D() rayframe.Scene {
+func (help helpPage) Render2D() rayframe.Scene {
 	width := help.WindowSize.X
 	height := help.WindowSize.Y
 	widthThird := float32(width) / 3

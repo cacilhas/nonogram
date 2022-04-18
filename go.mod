@@ -3,8 +3,9 @@ module github.com/cacilhas/nonogram
 go 1.17
 
 require (
+	github.com/cacilhas/rayframe v1.2.0
 	github.com/gen2brain/raylib-go/raygui v0.0.0-20211114111602-29ba3cc50849
-	github.com/gen2brain/raylib-go/raylib v0.0.0-20211111173445-914ca1ffdc4d
+	github.com/gen2brain/raylib-go/raylib v0.0.0-20220416121506-32324342245a
 	github.com/spf13/viper v1.9.0
 )
 

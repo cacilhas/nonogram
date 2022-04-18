@@ -2,23 +2,27 @@ package ui
 
 import (
 	"fmt"
+	"image/color"
 	"strings"
+	"time"
 
 	"github.com/cacilhas/nonogram/nonogram"
+	"github.com/cacilhas/rayframe"
 	raygui "github.com/gen2brain/raylib-go/raygui"
 	raylib "github.com/gen2brain/raylib-go/raylib"
 	"github.com/spf13/viper"
 )
 
 type gameplay struct {
-	game nonogram.Game
+	*rayframe.RayFrame
+	nonogram.Game
 }
 
 type offsetT struct {
 	x, y int32
 }
 
-func NewGameplay() Scene {
+func NewGameplay() rayframe.Scene {
 	size := viper.GetInt32("size")
 	checked := 2. / 3.
 	revealed := 0.0
@@ -26,24 +30,33 @@ func NewGameplay() Scene {
 		revealed = 1. / 3.
 	}
 	return &gameplay{
-		game: nonogram.NewGame(size, checked, revealed),
+		Game: nonogram.NewGame(size, checked, revealed),
 	}
 }
 
-func (gp *gameplay) Init() Scene {
+func (gp *gameplay) Background() color.RGBA {
+	return raylib.RayWhite
+}
+
+func (gp *gameplay) Init(frame *rayframe.RayFrame) {
+	gp.RayFrame = frame
 	raylib.SetExitKey(0)
+}
+
+func (gp *gameplay) Update(dt time.Duration) rayframe.Scene {
+	update(dt)
+	if raylib.IsKeyPressed(raylib.KeyEscape) {
+		return NewMenu()
+	}
+	if raylib.IsKeyPressed(raylib.KeyF1) {
+		return NewHelpPage(gp)
+	}
 	return gp
 }
 
-func (gp *gameplay) Render() Scene {
-	if raylib.IsKeyPressed(raylib.KeyEscape) {
-		return NewMenu().Init()
-	}
-	if raylib.IsKeyPressed(raylib.KeyF1) {
-		return NewHelpPage(gp).Init()
-	}
-
-	width, height := getSize()
+func (gp *gameplay) Render2D() rayframe.Scene {
+	width := int32(gp.WindowSize.X)
+	height := int32(gp.WindowSize.Y)
 	smaller := height
 	if width < smaller {
 		smaller = width
@@ -56,8 +69,8 @@ func (gp *gameplay) Render() Scene {
 		x: width - boardSize,
 		y: height - boardSize,
 	}
-	round := gp.game.Round()
-	reference := gp.game.Reference()
+	round := gp.Round()
+	reference := gp.Reference()
 	size := round.Size()
 	cellSize := boardSize / size
 
@@ -65,12 +78,17 @@ func (gp *gameplay) Render() Scene {
 	drawGrid(round, size, cellSize, offset)
 	drawColumns(reference, size, cellSize, offset)
 
-	if gp.game.IsDone() {
-		renderVictory()
-	} else {
-		checkClick(gp.game, cellSize, offset)
+	if !gp.IsDone() {
+		checkClick(gp.Game, cellSize, offset)
 	}
 
+	return gp
+}
+
+func (gp *gameplay) Render3D() rayframe.Scene {
+	if gp.IsDone() {
+		renderVictory(gp.Camera)
+	}
 	return gp
 }
 

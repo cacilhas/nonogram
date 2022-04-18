@@ -1,31 +1,45 @@
 package ui
 
 import (
+	"image/color"
+	"time"
+
+	"github.com/cacilhas/rayframe"
 	raygui "github.com/gen2brain/raylib-go/raygui"
 	raylib "github.com/gen2brain/raylib-go/raylib"
 	"github.com/spf13/viper"
 )
 
 type mainMenu struct {
+	*rayframe.RayFrame
 }
 
-func NewMenu() Scene {
+func NewMenu() rayframe.Scene {
 	return &mainMenu{}
 }
 
-func (m *mainMenu) Init() Scene {
+func (menu *mainMenu) Init(frame *rayframe.RayFrame) {
+	menu.RayFrame = frame
 	raylib.SetExitKey(raylib.KeyEscape)
-	return m
 }
 
-func (m *mainMenu) Render() Scene {
-	if raylib.IsKeyPressed(raylib.KeyF1) {
-		return NewHelpPage(m).Init()
-	}
+func (menu *mainMenu) Background() color.RGBA {
+	return raylib.RayWhite
+}
 
-	width, height := getSize()
+func (menu *mainMenu) Update(dt time.Duration) rayframe.Scene {
+	update(dt)
+	if raylib.IsKeyPressed(raylib.KeyF1) {
+		return NewHelpPage(menu)
+	}
+	return menu
+}
+
+func (menu *mainMenu) Render2D() rayframe.Scene {
+	width := menu.WindowSize.X
+	height := menu.WindowSize.Y
 	// TODO: fix fullscreen
-	renderResizer(width, height)
+	renderResizer(int32(width), int32(height))
 	bigFontSize := int64(float32(height) / 7.5)
 	if bigFontSize > 120 {
 		bigFontSize = 120
@@ -160,7 +174,7 @@ func (m *mainMenu) Render() Scene {
 		},
 		"Play",
 	) || raylib.IsKeyPressed(raylib.KeyEnter) || raylib.IsKeyPressed(raylib.KeyKpEnter) {
-		return NewGameplay().Init()
+		return NewGameplay()
 	}
 
 	raygui.SetStyleProperty(raygui.GlobalTextFontsize, helpFontSize)
@@ -175,5 +189,5 @@ func (m *mainMenu) Render() Scene {
 		"F1 for help",
 	)
 
-	return m
+	return menu
 }

@@ -2,9 +2,12 @@ package ui
 
 import (
 	"fmt"
+	"image/color"
 	"os/exec"
 	"runtime"
+	"time"
 
+	"github.com/cacilhas/rayframe"
 	raygui "github.com/gen2brain/raylib-go/raygui"
 	raylib "github.com/gen2brain/raylib-go/raylib"
 	"github.com/spf13/viper"
@@ -17,24 +20,34 @@ var commands = map[string]string{
 }
 
 type helpPage struct {
-	previous Scene
+	*rayframe.RayFrame
+	previous rayframe.Scene
 }
 
-func NewHelpPage(previous Scene) Scene {
+func NewHelpPage(previous rayframe.Scene) rayframe.Scene {
 	return &helpPage{previous: previous}
 }
 
-func (h *helpPage) Init() Scene {
+func (help *helpPage) Init(frame *rayframe.RayFrame) {
+	help.RayFrame = frame
 	raylib.SetExitKey(0)
-	return h
 }
 
-func (hp *helpPage) Render() Scene {
-	if raylib.IsKeyPressed(raylib.KeyEscape) {
-		return hp.previous.Init()
-	}
+func (help *helpPage) Background() color.RGBA {
+	return raylib.RayWhite
+}
 
-	width, height := getSize()
+func (help *helpPage) Update(dt time.Duration) rayframe.Scene {
+	update(dt)
+	if raylib.IsKeyPressed(raylib.KeyEscape) {
+		return help.previous
+	}
+	return help
+}
+
+func (help *helpPage) Render2D() rayframe.Scene {
+	width := help.WindowSize.X
+	height := help.WindowSize.Y
 	widthThird := float32(width) / 3
 	bigFontSize := int64(float32(height) / 7.5)
 	if bigFontSize > 120 {
@@ -173,7 +186,7 @@ func (hp *helpPage) Render() Scene {
 		raylib.LightGray,
 	)
 
-	return hp
+	return help
 }
 
 func openURL(uri string) {

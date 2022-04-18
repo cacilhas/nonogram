@@ -26,8 +26,9 @@ func main() {
 		Projection: raylib.CameraPerspective,
 	}
 	frame := &rayframe.RayFrame{
-		Camera: &camera,
-		FPS:    24,
+		Camera:    &camera,
+		FPS:       24,
+		InFront3D: true,
 	}
 	frame.Init(
 		viper.GetInt("width"),

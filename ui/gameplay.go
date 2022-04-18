@@ -43,11 +43,16 @@ func (gp *gameplay) Init(frame *rayframe.RayFrame) {
 	raylib.SetExitKey(0)
 }
 
+func (gp *gameplay) ExitKey() int32 {
+	return 0
+}
+
+func (gp *gameplay) OnKeyEscape() rayframe.Scene {
+	return NewMenu()
+}
+
 func (gp *gameplay) Update(dt time.Duration) rayframe.Scene {
 	update(dt)
-	if raylib.IsKeyPressed(raylib.KeyEscape) {
-		return NewMenu()
-	}
 	if raylib.IsKeyPressed(raylib.KeyF1) {
 		return NewHelpPage(gp)
 	}

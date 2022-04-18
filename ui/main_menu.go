@@ -20,7 +20,6 @@ func NewMenu() rayframe.Scene {
 
 func (menu *mainMenu) Init(frame *rayframe.RayFrame) {
 	menu.RayFrame = frame
-	raylib.SetExitKey(raylib.KeyEscape)
 }
 
 func (menu *mainMenu) Background() color.RGBA {

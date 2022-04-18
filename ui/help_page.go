@@ -30,7 +30,14 @@ func NewHelpPage(previous rayframe.Scene) rayframe.Scene {
 
 func (help *helpPage) Init(frame *rayframe.RayFrame) {
 	help.RayFrame = frame
-	raylib.SetExitKey(0)
+}
+
+func (help *helpPage) ExitKey() int32 {
+	return 0
+}
+
+func (help *helpPage) OnKeyEscape() rayframe.Scene {
+	return help.previous
 }
 
 func (help *helpPage) Background() color.RGBA {
@@ -39,9 +46,6 @@ func (help *helpPage) Background() color.RGBA {
 
 func (help *helpPage) Update(dt time.Duration) rayframe.Scene {
 	update(dt)
-	if raylib.IsKeyPressed(raylib.KeyEscape) {
-		return help.previous
-	}
 	return help
 }
 

@@ -21,7 +21,7 @@ func readSettings() {
 	}
 	defaultSettings()
 	viper.Set("homepage", "https://cacilhas.itch.io/nonogram")
-	viper.Set("version", "2.nightly")
+	viper.Set("version", "2.7")
 }
 
 func defaultSettings() {

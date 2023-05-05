@@ -34,21 +34,20 @@ fn main() -> anyhow::Result<()> {
 
     let font = Rc::new(fonts::get_font(&mut handle, &thr)?);
     let main_scene = MainMenuStage::new(screen_rect, font.clone());
-    let mut scene: Rc<RefCell<dyn Stage>> = Rc::new(RefCell::new(main_scene));
+    let mut scene: Box<dyn Stage> = Box::new(main_scene);
     let mut tick = Utc::now();
 
     while !handle.window_should_close() {
         let new_tick = Utc::now();
-        scene = scene
-            .clone()
-            .borrow_mut()
+        if let Some(new_scene) = scene
             .update(new_tick.signed_duration_since(tick), &mut handle, &thr)
-            .and_then(|scene| {
-                scene.borrow_mut().init(&mut handle, &thr, screen_rect);
+            .and_then(|mut scene| {
+                scene.init(&mut handle, &thr, screen_rect);
                 Some(scene)
             })
-            .or(Some(scene.clone()))
-            .unwrap();
+        {
+            scene = new_scene;
+        }
         tick = new_tick;
     }
     Ok(())

@@ -1,5 +1,3 @@
-use std::{cell::RefCell, rc::Rc};
-
 use chrono::Duration;
 
 use raylib::prelude::*;
@@ -13,5 +11,5 @@ pub trait Stage {
         dt: Duration,
         handle: &mut RaylibHandle,
         thr: &RaylibThread,
-    ) -> Option<Rc<RefCell<dyn Stage>>>;
+    ) -> Option<Box<dyn Stage>>;
 }

@@ -6,8 +6,6 @@ use nonogram::prelude::*;
 use raylib::prelude::*;
 use xrandr::XHandle;
 
-use nonogram::fonts;
-
 fn main() -> anyhow::Result<()> {
     let monitors = XHandle::open()?.monitors()?;
     let (width, height) = monitors

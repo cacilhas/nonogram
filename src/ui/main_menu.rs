@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::stage::Stage;
+use super::stage::Stage;
 use raylib::prelude::*;
 use raylib::text::measure_text_ex;
 
@@ -38,6 +38,7 @@ impl Stage for MainMenuStage {
             ..Default::default()
         };
         let mut draw = handle.begin_drawing(thr);
+        let mut draw = draw.begin_mode2D(camera);
 
         let background_color = Color::WHEAT;
         draw.clear_background(background_color);

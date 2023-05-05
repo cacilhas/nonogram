@@ -25,14 +25,22 @@ impl Stage for MainMenuStage {
     fn update(
         &mut self,
         _: chrono::Duration,
-        draw: &mut RaylibDrawHandle,
+        handle: &mut RaylibHandle,
+        thr: &RaylibThread,
     ) -> Option<Rc<RefCell<dyn Stage>>> {
+        let clicked = handle.is_mouse_button_released(MouseButton::MOUSE_BUTTON_LEFT);
+        let x = handle.get_mouse_x();
+        let y = handle.get_mouse_y();
+        let mouse = Vector2::new(x as f32, y as f32);
+
         let camera = Camera2D {
             zoom: 1.0,
             ..Default::default()
         };
-        let mut draw = draw.begin_mode2D(camera);
-        draw.clear_background(Color::WHEAT);
+        let mut draw = handle.begin_drawing(thr);
+
+        let background_color = Color::WHEAT;
+        draw.clear_background(background_color);
 
         let size = measure_text_ex(self.font.as_ref(), "Nonogram", 84.0, 2.0);
         let position = Vector2::new((self.rect.width - size.x) / 2.0, 0.0);
@@ -54,15 +62,13 @@ impl Stage for MainMenuStage {
             width: size.x,
             height: size.y,
         };
+        let tint = if button_5x5.check_collision_point_rec(mouse) {
+            Color::BLACK
+        } else {
+            Color::DARKGRAY
+        };
         let bottom = bottom + 12.0 + size.y;
-        draw.draw_text_ex(
-            self.font.as_ref(),
-            "5x5",
-            position,
-            64.0,
-            1.0,
-            Color::DARKGRAY,
-        );
+        draw.draw_text_ex(self.font.as_ref(), "5x5", position, 64.0, 1.0, tint);
 
         let size = measure_text_ex(self.font.as_ref(), "10x10", 64.0, 1.0);
         let position = Vector2::new((self.rect.width - size.x) / 2.0, bottom);
@@ -73,14 +79,12 @@ impl Stage for MainMenuStage {
             width: size.x,
             height: size.y,
         };
-        draw.draw_text_ex(
-            self.font.as_ref(),
-            "10x10",
-            position,
-            64.0,
-            1.0,
-            Color::DARKGRAY,
-        );
+        let tint = if button_10x10.check_collision_point_rec(mouse) {
+            Color::BLACK
+        } else {
+            Color::DARKGRAY
+        };
+        draw.draw_text_ex(self.font.as_ref(), "10x10", position, 64.0, 1.0, tint);
 
         let size = measure_text_ex(self.font.as_ref(), "15x15", 64.0, 1.0);
         let position = Vector2::new((self.rect.width - size.x) / 2.0, bottom);
@@ -91,14 +95,12 @@ impl Stage for MainMenuStage {
             width: size.x,
             height: size.y,
         };
-        draw.draw_text_ex(
-            self.font.as_ref(),
-            "15x15",
-            position,
-            64.0,
-            1.0,
-            Color::DARKGRAY,
-        );
+        let tint = if button_15x15.check_collision_point_rec(mouse) {
+            Color::BLACK
+        } else {
+            Color::DARKGRAY
+        };
+        draw.draw_text_ex(self.font.as_ref(), "15x15", position, 64.0, 1.0, tint);
 
         let size = measure_text_ex(self.font.as_ref(), "Hints", 64.0, 1.0);
         let position = Vector2::new((self.rect.width - size.x) / 2.0, bottom);
@@ -114,15 +116,21 @@ impl Stage for MainMenuStage {
                 button_hints.y as i32,
                 button_hints.width as i32 + 4,
                 button_hints.height as i32,
-                Color::GREEN,
+                Color::DARKSLATEBLUE,
             );
         }
         let color = if self.hints {
-            Color::SLATEBLUE
+            background_color
         } else {
             Color::DARKSLATEBLUE
         };
         draw.draw_text_ex(self.font.as_ref(), "Hints", position, 64.0, 1.0, color);
+
+        if clicked {
+            if button_hints.check_collision_point_rec(mouse) {
+                self.hints = !self.hints;
+            }
+        }
 
         None
     }

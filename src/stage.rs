@@ -11,6 +11,7 @@ pub trait Stage {
     fn update(
         &mut self,
         dt: Duration,
-        draw: &mut RaylibDrawHandle,
+        handle: &mut RaylibHandle,
+        thr: &RaylibThread,
     ) -> Option<Rc<RefCell<dyn Stage>>>;
 }

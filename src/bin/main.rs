@@ -40,12 +40,11 @@ fn main() -> anyhow::Result<()> {
     let mut tick = Utc::now();
 
     while !handle.window_should_close() {
-        let mut draw = handle.begin_drawing(&thr);
         let new_tick = Utc::now();
         scene = scene
             .clone()
             .borrow_mut()
-            .update(new_tick.signed_duration_since(tick), &mut draw)
+            .update(new_tick.signed_duration_since(tick), &mut handle, &thr)
             .and_then(|scene| {
                 scene.borrow_mut().init(screen_rect);
                 Some(scene)

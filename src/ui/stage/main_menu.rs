@@ -5,7 +5,7 @@ use crate::game::BoardStruct;
 use super::gameplay::GameplayStage;
 use super::stage::Stage;
 use raylib::prelude::*;
-use raylib::text::measure_text_ex;
+use raylib::{ffi, text::measure_text_ex};
 
 #[derive(Debug)]
 pub struct MainMenuStage {
@@ -14,17 +14,31 @@ pub struct MainMenuStage {
     hints: bool,
 }
 
-impl MainMenuStage {
-    pub fn new(rect: Rectangle, font: Rc<Font>) -> Self {
+impl Default for MainMenuStage {
+    fn default() -> Self {
+        let font = unsafe { ffi::GetFontDefault() };
+        let font = unsafe { Font::from_raw(font) };
         Self {
-            rect,
-            font,
+            rect: Rectangle::default(),
+            font: font.into(),
             hints: false,
         }
     }
 }
 
 impl Stage for MainMenuStage {
+    fn init(
+        &mut self,
+        handle: &mut RaylibHandle,
+        _: &RaylibThread,
+        rect: Rectangle,
+        font: Rc<Font>,
+    ) {
+        handle.set_exit_key(Some(KeyboardKey::KEY_ESCAPE));
+        self.rect = rect;
+        self.font = font;
+    }
+
     fn update(
         &mut self,
         _: chrono::Duration,

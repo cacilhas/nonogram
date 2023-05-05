@@ -1,10 +1,19 @@
+use std::rc::Rc;
+
 use chrono::Duration;
 
 use raylib::prelude::*;
 
 pub trait Stage {
     #[allow(unused_variables)]
-    fn init(&mut self, handle: &mut RaylibHandle, thr: &RaylibThread, rect: Rectangle) {}
+    fn init(
+        &mut self,
+        handle: &mut RaylibHandle,
+        thr: &RaylibThread,
+        rect: Rectangle,
+        font: Rc<Font>,
+    ) {
+    }
 
     fn update(
         &mut self,

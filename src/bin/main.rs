@@ -1,5 +1,5 @@
 extern crate nonogram;
-use std::{cell::RefCell, rc::Rc};
+use std::rc::Rc;
 
 use chrono::prelude::*;
 use nonogram::prelude::*;
@@ -32,8 +32,9 @@ fn main() -> anyhow::Result<()> {
     handle.get_window_state().set_fullscreen_mode(true);
     handle.set_exit_key(Some(KeyboardKey::KEY_ESCAPE));
 
-    let font = Rc::new(fonts::get_font(&mut handle, &thr)?);
-    let main_scene = MainMenuStage::new(screen_rect, font.clone());
+    let font: Rc<Font> = fonts::get_font(&mut handle, &thr)?.into();
+    let mut main_scene = MainMenuStage::default();
+    main_scene.init(&mut handle, &thr, screen_rect, font.clone());
     let mut scene: Box<dyn Stage> = Box::new(main_scene);
     let mut tick = Utc::now();
 
@@ -42,7 +43,7 @@ fn main() -> anyhow::Result<()> {
         if let Some(new_scene) = scene
             .update(new_tick.signed_duration_since(tick), &mut handle, &thr)
             .and_then(|mut scene| {
-                scene.init(&mut handle, &thr, screen_rect);
+                scene.init(&mut handle, &thr, screen_rect, font.clone());
                 Some(scene)
             })
         {

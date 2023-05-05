@@ -13,3 +13,10 @@ where
         write!(f, "{}", self.0)
     }
 }
+
+#[macro_export]
+macro_rules! error {
+    ($($arg:tt)+) => {
+        $crate::error::Error(format!($($arg),+))
+    }
+}

@@ -17,7 +17,7 @@ fn main() -> anyhow::Result<()> {
                 None
             }
         })
-        .ok_or(Error("could not determinate monitor dimensions".to_owned()))?;
+        .ok_or(error!("could not determinate monitor dimensions"))?;
     let screen_rect = Rectangle {
         width: width as f32,
         height: height as f32,

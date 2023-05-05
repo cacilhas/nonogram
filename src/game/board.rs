@@ -1,5 +1,5 @@
 use super::cell::Cell;
-use crate::error::Error;
+use crate::error;
 
 #[derive(Debug)]
 pub struct Board<const W: usize, const H: usize> {
@@ -44,10 +44,10 @@ impl<const W: usize, const H: usize> Board<W, H> {
 
     fn check_coordinates(x: usize, y: usize) -> anyhow::Result<()> {
         if x >= W {
-            return Err(Error(format!("x [{x}] cannot be greater or equal to {W}")).into());
+            return Err(error!("x [{x}] cannot be greater or equal to {W}").into());
         }
         if y >= H {
-            return Err(Error(format!("y [{y}] cannot be greater or equal to {H}")).into());
+            return Err(error!("y [{y}] cannot be greater or equal to {H}").into());
         }
         Ok(())
     }

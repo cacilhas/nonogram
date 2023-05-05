@@ -3,12 +3,12 @@ use std::process::Command;
 use raylib::prelude::*;
 use walkdir::WalkDir;
 
-use crate::prelude::Error;
+use crate::error;
 
 pub fn get_font(handle: &mut RaylibHandle, thr: &RaylibThread) -> anyhow::Result<Font> {
     let font_name = find_gnome_font()?;
     let path = find_font_path(font_name)?;
-    Ok(handle.load_font(&thr, &path).map_err(Error)?)
+    Ok(handle.load_font(&thr, &path).map_err(error::Error)?)
 }
 
 fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
@@ -24,7 +24,7 @@ fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
             }
         }
     }
-    Err(Error(format!("could not find {font_name:?}")).into())
+    Err(error!("could not find {font_name:?}").into())
 }
 
 fn find_gnome_font() -> anyhow::Result<Vec<String>> {
@@ -49,10 +49,7 @@ fn find_gnome_font() -> anyhow::Result<Vec<String>> {
         Ok(font)
     } else {
         let err = String::from_utf8_lossy(&output.stderr).trim().to_owned();
-        Err(Error(format!(
-            "error getting org.gnome.desktop.interface[font-name]: {err}"
-        ))
-        .into())
+        Err(error!("error getting org.gnome.desktop.interface[font-name]: {err}").into())
     }
 }
 

@@ -1,17 +1,4 @@
-use std::{cell::RefCell, rc::Rc};
+pub mod main_menu;
+mod stage;
 
-use chrono::Duration;
-
-use raylib::prelude::*;
-
-pub trait Stage {
-    #[allow(unused_variables)]
-    fn init(&mut self, rect: Rectangle) {}
-
-    fn update(
-        &mut self,
-        dt: Duration,
-        handle: &mut RaylibHandle,
-        thr: &RaylibThread,
-    ) -> Option<Rc<RefCell<dyn Stage>>>;
-}
+pub use stage::Stage;

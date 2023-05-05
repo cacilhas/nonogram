@@ -44,7 +44,7 @@ fn main() -> anyhow::Result<()> {
             .borrow_mut()
             .update(new_tick.signed_duration_since(tick), &mut handle, &thr)
             .and_then(|scene| {
-                scene.borrow_mut().init(screen_rect);
+                scene.borrow_mut().init(&mut handle, &thr, screen_rect);
                 Some(scene)
             })
             .or(Some(scene.clone()))

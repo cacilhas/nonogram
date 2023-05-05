@@ -3,6 +3,7 @@
 extern crate static_init;
 
 pub mod error;
+pub mod game;
 pub mod ui;
 
 pub mod prelude {

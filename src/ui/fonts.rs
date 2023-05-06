@@ -1,6 +1,8 @@
+#[cfg(target_os = "linux")]
 use std::{env, process::Command};
 
 use raylib::prelude::*;
+#[cfg(target_os = "linux")]
 use walkdir::WalkDir;
 
 use crate::error;
@@ -11,6 +13,7 @@ pub fn get_font(handle: &mut RaylibHandle, thr: &RaylibThread) -> anyhow::Result
     Ok(handle.load_font(&thr, &path).map_err(error::Error)?)
 }
 
+#[cfg(target_os = "linux")]
 fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
     for directory in FONT_DIRS.iter() {
         'entry: for entry in WalkDir::new(directory).into_iter().filter_map(Result::ok) {
@@ -29,6 +32,15 @@ fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
     Err(error!("could not find {font_name:?}").into())
 }
 
+#[cfg(target_os = "macos")]
+fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
+    let font = font_name
+        .first()
+        .ok_or_else(|| error!("no font supplied"))?;
+    Ok(format!("/System/Library/Fonts/{}", font))
+}
+
+#[cfg(target_os = "linux")]
 fn find_gnome_font() -> anyhow::Result<Vec<String>> {
     let output = Command::new("gsettings")
         .arg("get")
@@ -54,7 +66,12 @@ fn find_gnome_font() -> anyhow::Result<Vec<String>> {
         Err(error!("error getting org.gnome.desktop.interface[font-name]: {err}").into())
     }
 }
+#[cfg(target_os = "macos")]
+fn find_gnome_font() -> anyhow::Result<Vec<String>> {
+    Ok(vec!["SFCompactRounded.ttf".to_owned()])
+}
 
+#[cfg(target_os = "linux")]
 #[dynamic]
 static FONT_DIRS: [String; 2] = [
     format!(

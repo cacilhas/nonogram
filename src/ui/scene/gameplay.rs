@@ -158,7 +158,11 @@ impl Scene for GameplayScene {
                     self.board_rect.y + (self.size.y * self.cell_size.y),
                 ),
                 2.0,
-                Color::DARKGRAY,
+                if i % 5 == 0 {
+                    Color::BLACK
+                } else {
+                    Color::DARKGRAY
+                },
             );
         }
         draw.draw_line_ex(
@@ -171,12 +175,12 @@ impl Scene for GameplayScene {
                 self.board_rect.y + (self.size.y * self.cell_size.y),
             ),
             2.0,
-            Color::DARKGRAY,
+            Color::BLACK,
         );
 
         // Draw vhints and horizontal lines
         for i in 0..(self.size.y as usize) {
-            let y = self.vhints_rect.y + (i as f32 * self.cell_size.y);
+            let y = self.vhints_rect.y + (i as f32 * self.cell_size.y) + 4.0;
             let text = &self.vhints[i];
             draw.draw_text_ex(
                 self.font.as_ref(),
@@ -196,7 +200,11 @@ impl Scene for GameplayScene {
                     self.board_rect.y + (i as f32 * self.cell_size.y),
                 ),
                 2.0,
-                Color::DARKGRAY,
+                if i % 5 == 0 {
+                    Color::BLACK
+                } else {
+                    Color::DARKGRAY
+                },
             );
         }
         draw.draw_line_ex(
@@ -209,7 +217,7 @@ impl Scene for GameplayScene {
                 self.board_rect.y + (self.size.y * self.cell_size.y),
             ),
             2.0,
-            Color::DARKGRAY,
+            Color::BLACK,
         );
 
         for y in 0..(self.size.y as usize) {
@@ -252,16 +260,20 @@ impl Scene for GameplayScene {
                             Color::DARKGRAY,
                         );
                     }
-                    Cell::Yes => {
-                        draw.draw_rectangle(
-                            current_rect.x as i32,
-                            current_rect.y as i32,
-                            current_rect.width as i32,
-                            current_rect.height as i32,
-                            Color::DARKBLUE,
-                        );
-                    }
-                    Cell::Closed => (), // do nothing
+                    Cell::Yes => draw.draw_rectangle(
+                        current_rect.x as i32,
+                        current_rect.y as i32,
+                        current_rect.width as i32,
+                        current_rect.height as i32,
+                        Color::DARKBLUE,
+                    ),
+                    Cell::Closed => draw.draw_rectangle(
+                        current_rect.x as i32,
+                        current_rect.y as i32,
+                        current_rect.width as i32,
+                        current_rect.height as i32,
+                        Color::LIGHTPINK,
+                    ),
                 }
             }
         }
@@ -275,6 +287,13 @@ impl Scene for GameplayScene {
                 0.0,
                 Color::GREEN,
             );
+            for y in 0..(self.size.y as usize) {
+                for x in 0..(self.size.x as usize) {
+                    if self.board.get(x, y).unwrap() == Cell::Closed {
+                        self.board.set(x, y, Cell::No).unwrap();
+                    }
+                }
+            }
         }
 
         State::Keep

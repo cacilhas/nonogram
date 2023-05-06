@@ -31,3 +31,6 @@ xrandr = "0.1"
 version = "4.5"
 git = "https://github.com/litten2up/raylib-rs"
 branch = "4.5.0"
+
+[[bin]]
+name = "nonogram"

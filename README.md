@@ -1,10 +1,13 @@
 [The 3-Clause BSD License]: https://opensource.org/licenses/BSD-3-Clause
 [COPYING]: https://github.com/cacilhas/nonogram/blob/master/COPYING
+[Itch.io]: https://cacilhas.itch.io/nonogram
 [UPX]: https://upx.github.io/
 
 # Nonogram
 
 A simple random nonogram game.
+
+More about it on [Itch.io][].
 
 ## Install
 

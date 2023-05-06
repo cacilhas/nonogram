@@ -1,4 +1,4 @@
-[BSD 3-Clause]: https://opensource.org/licenses/BSD-3-Clause
+[The 3-Clause BSD License]: https://opensource.org/licenses/BSD-3-Clause
 [COPYING]: https://github.com/cacilhas/nonogram/blob/master/COPYING
 
 # Nonogram
@@ -13,5 +13,5 @@ cargo install --git https://github.com/cacilhas/nonogram --bin nonogram
 
 ## License
 
-- [BSD 3-Clause][]
+- [The 3-Clause BSD License][]
 - [COPYING][]

@@ -108,6 +108,10 @@ impl Scene for GameplayScene {
     ) -> State {
         let left_click = handle.is_mouse_button_released(MouseButton::MOUSE_BUTTON_LEFT);
         let right_click = handle.is_mouse_button_released(MouseButton::MOUSE_BUTTON_RIGHT);
+        let ctrl = handle.is_key_down(KeyboardKey::KEY_LEFT_CONTROL)
+            || handle.is_key_down(KeyboardKey::KEY_RIGHT_CONTROL);
+        let right_click = right_click || (left_click && ctrl);
+        let left_click = left_click && !ctrl;
         let x = handle.get_mouse_x();
         let y = handle.get_mouse_y();
         let mouse = Vector2::new(x as f32, y as f32);

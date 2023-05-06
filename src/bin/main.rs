@@ -1,5 +1,5 @@
 extern crate nonogram;
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
 use chrono::prelude::*;
 use nonogram::prelude::*;
@@ -35,19 +35,35 @@ fn main() -> anyhow::Result<()> {
     let font: Rc<Font> = fonts::get_font(&mut handle, &thr)?.into();
     let mut main_scene = MainMenuStage::default();
     main_scene.init(&mut handle, &thr, screen_rect, font.clone());
-    let mut scene: Box<dyn Stage> = Box::new(main_scene);
+    let mut scenes: Vec<Rc<RefCell<dyn Stage>>> = vec![Rc::new(RefCell::new(main_scene))];
     let mut tick = Utc::now();
 
     while !handle.window_should_close() {
         let new_tick = Utc::now();
-        if let Some(new_scene) = scene
-            .update(new_tick.signed_duration_since(tick), &mut handle, &thr)
-            .and_then(|mut scene| {
-                scene.init(&mut handle, &thr, screen_rect, font.clone());
-                Some(scene)
-            })
-        {
-            scene = new_scene;
+        let state = {
+            let scene = scenes.last().expect("no more scenes");
+            scene
+                .borrow_mut()
+                .update(new_tick.signed_duration_since(tick), &mut handle, &thr)
+        };
+        match state {
+            State::New(scene) => {
+                {
+                    scene
+                        .borrow_mut()
+                        .init(&mut handle, &thr, screen_rect, font.clone())
+                };
+                scenes.push(scene);
+            }
+            State::Previous => {
+                scenes.pop();
+                scenes
+                    .first()
+                    .expect("last scene popped")
+                    .borrow_mut()
+                    .init(&mut handle, &thr, screen_rect, font.clone());
+            }
+            State::Keep => (),
         }
         tick = new_tick;
     }

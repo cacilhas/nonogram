@@ -1,9 +1,10 @@
+use std::cell::RefCell;
 use std::rc::Rc;
 
 use crate::game::BoardStruct;
 
 use super::gameplay::GameplayStage;
-use super::stage::Stage;
+use super::{Stage, State};
 use raylib::prelude::*;
 use raylib::{ffi, text::measure_text_ex};
 
@@ -44,7 +45,7 @@ impl Stage for MainMenuStage {
         _: chrono::Duration,
         handle: &mut RaylibHandle,
         thr: &RaylibThread,
-    ) -> Option<Box<dyn Stage>> {
+    ) -> State {
         let clicked = handle.is_mouse_button_released(MouseButton::MOUSE_BUTTON_LEFT);
         let x = handle.get_mouse_x();
         let y = handle.get_mouse_y();
@@ -151,23 +152,20 @@ impl Stage for MainMenuStage {
 
             if button_5x5.check_collision_point_rec(mouse) {
                 let board = Box::new(BoardStruct::<5, 5>::random(self.hints));
-                let stage: Box<dyn Stage> = Box::new(GameplayStage::new(board));
-                return Some(stage);
+                return State::New(Rc::new(RefCell::new(GameplayStage::new(board))));
             }
 
             if button_10x10.check_collision_point_rec(mouse) {
                 let board = Box::new(BoardStruct::<10, 10>::random(self.hints));
-                let stage: Box<dyn Stage> = Box::new(GameplayStage::new(board));
-                return Some(stage);
+                return State::New(Rc::new(RefCell::new(GameplayStage::new(board))));
             }
 
             if button_15x15.check_collision_point_rec(mouse) {
                 let board = Box::new(BoardStruct::<15, 15>::random(self.hints));
-                let stage: Box<dyn Stage> = Box::new(GameplayStage::new(board));
-                return Some(stage);
+                return State::New(Rc::new(RefCell::new(GameplayStage::new(board))));
             }
         }
 
-        None
+        State::Keep
     }
 }

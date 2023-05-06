@@ -5,7 +5,7 @@ use raylib::prelude::*;
 
 use crate::game::Board;
 
-use super::Stage;
+use super::{Stage, State};
 
 pub struct GameplayStage {
     board: Box<dyn Board>,
@@ -72,6 +72,7 @@ impl Stage for GameplayStage {
         font: Rc<Font>,
     ) {
         handle.set_exit_key(None);
+        self.font = font;
         self.window = rect;
         self.board_rect = Rectangle {
             x: 0.0,
@@ -102,11 +103,15 @@ impl Stage for GameplayStage {
         _: chrono::Duration,
         handle: &mut raylib::RaylibHandle,
         thr: &raylib::RaylibThread,
-    ) -> Option<Box<dyn Stage>> {
+    ) -> State {
         let clicked = handle.is_mouse_button_released(MouseButton::MOUSE_BUTTON_LEFT);
         let x = handle.get_mouse_x();
         let y = handle.get_mouse_y();
         let mouse = Vector2::new(x as f32, y as f32);
+
+        if handle.is_key_released(KeyboardKey::KEY_ESCAPE) {
+            return State::Previous;
+        }
 
         let camera = Camera2D {
             zoom: 1.0,
@@ -115,6 +120,27 @@ impl Stage for GameplayStage {
         let mut draw = handle.begin_drawing(thr);
         let mut draw = draw.begin_mode2D(camera);
 
-        todo!()
+        let background_color = Color::WHEAT;
+        draw.clear_background(background_color);
+
+        let font_size = if self.cell_size.x < self.cell_size.y {
+            self.cell_size.x
+        } else {
+            self.cell_size.y
+        } - 2.0;
+        for i in 0..(self.size.x as usize) {
+            let x = self.hhints_rect.x + (i as f32 * self.cell_size.x);
+            let text = &self.hhints[i];
+            draw.draw_text_ex(
+                self.font.as_ref(),
+                text,
+                Vector2::new(x, 0.0),
+                font_size,
+                1.0,
+                Color::BLACK,
+            );
+        }
+
+        State::Keep
     }
 }

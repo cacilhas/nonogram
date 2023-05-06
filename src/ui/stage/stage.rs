@@ -1,5 +1,7 @@
 use std::rc::Rc;
 
+use super::state::State;
+
 use chrono::Duration;
 
 use raylib::prelude::*;
@@ -15,10 +17,5 @@ pub trait Stage {
     ) {
     }
 
-    fn update(
-        &mut self,
-        dt: Duration,
-        handle: &mut RaylibHandle,
-        thr: &RaylibThread,
-    ) -> Option<Box<dyn Stage>>;
+    fn update(&mut self, dt: Duration, handle: &mut RaylibHandle, thr: &RaylibThread) -> State;
 }

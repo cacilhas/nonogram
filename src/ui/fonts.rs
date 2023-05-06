@@ -32,7 +32,10 @@ fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
 
 #[cfg(target_os = "macos")]
 fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
-    format!("/System/Library/Fonts/{}", font_name.first().unwrap())
+    let font = font_name
+        .first()
+        .ok_or_else(|| error!("no font supplied"))?;
+    Ok(format!("/System/Library/Fonts/{}", font))
 }
 
 #[cfg(target_os = "linux")]

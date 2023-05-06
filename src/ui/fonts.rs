@@ -10,7 +10,7 @@ use crate::error;
 pub fn get_font(handle: &mut RaylibHandle, thr: &RaylibThread) -> anyhow::Result<Font> {
     let font_name = find_gnome_font()?;
     let path = find_font_path(font_name)?;
-    Ok(handle.load_font(&thr, &path).map_err(error::Error)?)
+    Ok(handle.load_font(thr, &path).map_err(error::Error)?)
 }
 
 #[cfg(target_os = "linux")]

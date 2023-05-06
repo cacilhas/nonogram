@@ -44,11 +44,9 @@ fn main() -> anyhow::Result<()> {
         };
         match state {
             State::New(scene) => {
-                {
-                    scene
+                scene
                         .borrow_mut()
-                        .init(&mut handle, &thr, screen_rect, font.clone())
-                };
+                        .init(&mut handle, &thr, screen_rect, font.clone());
                 scenes.push(scene);
             }
             State::Previous => {

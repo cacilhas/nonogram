@@ -141,7 +141,7 @@ impl Scene for GameplayScene {
         for i in 0..(self.size.x as usize) {
             let x = self.hhints_rect.x + (i as f32 * self.cell_size.x);
             let mut y = 0.0;
-            for text in self.hhints[i].split(" ").into_iter() {
+            for text in self.hhints[i].split(' ') {
                 draw.draw_text_ex(
                     self.font.as_ref(),
                     text,

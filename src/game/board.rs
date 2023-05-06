@@ -117,15 +117,13 @@ impl<const W: usize, const H: usize> BoardStruct<W, H> {
             let mut last = false;
             let mut count = 0_usize;
             for y in 0..H {
-                if !last {
-                    if count > 0 {
-                        hhints[x].push(count);
-                        count = 0;
-                    }
+                if !last && count > 0 {
+                    hhints[x].push(count);
+                    count = 0;
                 }
                 if self.data[y][x].into() {
                     last = true;
-                    count = count + 1;
+                    count += 1;
                 } else {
                     last = false;
                 }
@@ -143,15 +141,13 @@ impl<const W: usize, const H: usize> BoardStruct<W, H> {
             let mut last = false;
             let mut count = 0_usize;
             for x in 0..W {
-                if !last {
-                    if count > 0 {
-                        vhints[y].push(count);
-                        count = 0;
-                    }
+                if !last && count > 0 {
+                    vhints[y].push(count);
+                    count = 0;
                 }
                 if self.data[y][x].into() {
                     last = true;
-                    count = count + 1;
+                    count += 1;
                 } else {
                     last = false;
                 }

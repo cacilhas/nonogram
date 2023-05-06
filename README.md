@@ -5,6 +5,8 @@
 
 # Nonogram
 
+![Nonogram](./nonogram.png)
+
 A simple random nonogram game.
 
 More about it on [Itch.io][].

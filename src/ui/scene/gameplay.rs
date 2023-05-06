@@ -75,27 +75,28 @@ impl Scene for GameplayScene {
         self.font = font;
         self.window = rect;
         self.board_rect = Rectangle {
-            x: 0.0,
-            y: rect.height / 3.0,
+            x: rect.x,
+            y: rect.y + rect.height / 3.0,
             width: rect.width / 1.5,
             height: rect.height / 1.5,
         };
+        self.board_rect.height = rect.height - self.board_rect.y;
+        self.cell_size = Vector2::new(
+            self.board_rect.width / self.size.x,
+            self.board_rect.height / (self.size.y + 1.0),
+        );
         self.hhints_rect = Rectangle {
-            x: 0.0,
-            y: 0.0,
+            x: rect.x + self.cell_size.x / 2.0,
+            y: rect.y,
             width: rect.width / 1.5,
             height: rect.height / 3.0,
         };
         self.vhints_rect = Rectangle {
-            x: rect.width / 1.5,
-            y: rect.height / 1.5,
+            x: self.board_rect.x + self.board_rect.width + self.cell_size.x / 2.0,
+            y: self.board_rect.y,
             width: rect.width / 3.0,
             height: rect.height / 3.0,
         };
-        self.cell_size = Vector2::new(
-            rect.width / (3.0 * self.size.x),
-            rect.height / (3.0 * self.size.y),
-        );
     }
 
     fn update(
@@ -127,19 +128,84 @@ impl Scene for GameplayScene {
             self.cell_size.x
         } else {
             self.cell_size.y
-        } - 2.0;
+        } * 0.75
+            - 2.0;
         for i in 0..(self.size.x as usize) {
             let x = self.hhints_rect.x + (i as f32 * self.cell_size.x);
-            let text = &self.hhints[i];
+            let mut y = 0.0;
+            for text in self.hhints[i].split(" ").into_iter() {
+                draw.draw_text_ex(
+                    self.font.as_ref(),
+                    text,
+                    Vector2::new(x, y),
+                    font_size,
+                    1.0,
+                    Color::BLACK,
+                );
+                y += font_size;
+            }
+            draw.draw_line_ex(
+                Vector2::new(
+                    self.board_rect.x + (i as f32 * self.cell_size.x),
+                    self.board_rect.y,
+                ),
+                Vector2::new(
+                    self.board_rect.x + (i as f32 * self.cell_size.x),
+                    self.board_rect.y + (self.size.y * self.cell_size.y),
+                ),
+                2.0,
+                Color::DARKGRAY,
+            );
+        }
+        draw.draw_line_ex(
+            Vector2::new(
+                self.board_rect.x + (self.size.y * self.cell_size.x),
+                self.board_rect.y,
+            ),
+            Vector2::new(
+                self.board_rect.x + (self.size.x * self.cell_size.x),
+                self.board_rect.y + (self.size.y * self.cell_size.y),
+            ),
+            2.0,
+            Color::DARKGRAY,
+        );
+
+        for i in 0..(self.size.y as usize) {
+            let y = self.vhints_rect.y + (i as f32 * self.cell_size.y);
+            let text = &self.vhints[i];
             draw.draw_text_ex(
                 self.font.as_ref(),
                 text,
-                Vector2::new(x, 0.0),
+                Vector2::new(self.vhints_rect.x, y),
                 font_size,
                 1.0,
                 Color::BLACK,
             );
+            draw.draw_line_ex(
+                Vector2::new(
+                    self.board_rect.x,
+                    self.board_rect.y + (i as f32 * self.cell_size.y),
+                ),
+                Vector2::new(
+                    self.board_rect.x + (self.size.y * self.cell_size.x),
+                    self.board_rect.y + (i as f32 * self.cell_size.y),
+                ),
+                2.0,
+                Color::DARKGRAY,
+            );
         }
+        draw.draw_line_ex(
+            Vector2::new(
+                self.board_rect.x,
+                self.board_rect.y + (self.size.y * self.cell_size.y),
+            ),
+            Vector2::new(
+                self.board_rect.x + (self.size.x * self.cell_size.x),
+                self.board_rect.y + (self.size.y * self.cell_size.y),
+            ),
+            2.0,
+            Color::DARKGRAY,
+        );
 
         State::Keep
     }

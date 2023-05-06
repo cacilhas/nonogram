@@ -18,6 +18,13 @@ If you have [UPX][] installed, you maybe want to run:
 upx ~/.cargo/bin/nonogram
 ```
 
+## Gameplay
+
+Left click (LMB) to set the cell, right click (RMB) or control + LMB to mark a
+cell as unsettable.
+
+You win when you have set all correct cells.
+
 ## License
 
 - [The 3-Clause BSD License][]

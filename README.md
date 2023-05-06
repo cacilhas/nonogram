@@ -1,5 +1,5 @@
 [BSD 3-Clause]: https://opensource.org/licenses/BSD-3-Clause
-[COPING]: https://github.com/cacilhas/nonogram/blob/master/COPYING
+[COPYING]: https://github.com/cacilhas/nonogram/blob/master/COPYING
 
 # Nonogram
 

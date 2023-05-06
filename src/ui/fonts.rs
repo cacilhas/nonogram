@@ -14,13 +14,15 @@ pub fn get_font(handle: &mut RaylibHandle, thr: &RaylibThread) -> anyhow::Result
 fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
     for directory in FONT_DIRS.iter() {
         'entry: for entry in WalkDir::new(directory).into_iter().filter_map(Result::ok) {
-            if let Some(current) = entry.file_name().to_str() && current.ends_with(".ttf") {
-                for e in font_name.iter() {
-                    if !current.contains(e) {
-                        continue 'entry;
+            if let Some(current) = entry.file_name().to_str() {
+                if current.ends_with(".ttf") {
+                    for e in font_name.iter() {
+                        if !current.contains(e) {
+                            continue 'entry;
+                        }
                     }
+                    return Ok(current.to_owned());
                 }
-                return Ok(current.to_owned());
             }
         }
     }

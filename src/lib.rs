@@ -1,4 +1,3 @@
-#![feature(let_chains)]
 #[macro_use]
 extern crate static_init;
 

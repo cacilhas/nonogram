@@ -120,8 +120,8 @@ impl Scene for GameplayScene {
             zoom: 1.0,
             ..Default::default()
         };
-        let mut draw = handle.begin_drawing(thr);
-        let mut draw = draw.begin_mode2D(camera);
+        let mut base_draw = handle.begin_drawing(thr);
+        let mut draw = base_draw.begin_mode2D(camera);
 
         let background_color = Color::WHEAT;
         draw.clear_background(background_color);
@@ -224,7 +224,8 @@ impl Scene for GameplayScene {
                 if left_click && current_rect.check_collision_point_rec(mouse) {
                     match self.board.get(x, y).unwrap() {
                         Cell::Yes => self.board.set(x, y, Cell::Closed).unwrap(),
-                        _ => self.board.set(x, y, Cell::Yes).unwrap(),
+                        Cell::Closed => self.board.set(x, y, Cell::Yes).unwrap(),
+                        Cell::No => (),
                     }
                 }
                 if right_click && current_rect.check_collision_point_rec(mouse) {
@@ -263,6 +264,17 @@ impl Scene for GameplayScene {
                     Cell::Closed => (), // do nothing
                 }
             }
+        }
+
+        if self.board.is_done() {
+            draw.draw_text_ex(
+                self.font.as_ref(),
+                "V",
+                Vector2::new(self.vhints_rect.x, self.window.y),
+                240.0,
+                0.0,
+                Color::GREEN,
+            );
         }
 
         State::Keep

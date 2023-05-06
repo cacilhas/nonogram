@@ -66,7 +66,7 @@ impl<const W: usize, const H: usize> BoardStruct<W, H> {
     pub fn random(with_hints: bool) -> impl Board {
         let mut board = Self::default();
         for (x, y) in Self::pairs() {
-            board.data[y][x] = (fastrand::u8(0..16u8) < 6u8).into();
+            board.data[y][x] = (fastrand::u8(0..16u8) < 10u8).into();
         }
         board.reset_hints();
         if with_hints {

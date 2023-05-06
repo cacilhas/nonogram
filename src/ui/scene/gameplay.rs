@@ -4,6 +4,7 @@ use raylib::ffi;
 use raylib::prelude::*;
 
 use crate::game::Board;
+use crate::game::Cell;
 
 use super::{Scene, State};
 
@@ -105,7 +106,8 @@ impl Scene for GameplayScene {
         handle: &mut raylib::RaylibHandle,
         thr: &raylib::RaylibThread,
     ) -> State {
-        let clicked = handle.is_mouse_button_released(MouseButton::MOUSE_BUTTON_LEFT);
+        let left_click = handle.is_mouse_button_released(MouseButton::MOUSE_BUTTON_LEFT);
+        let right_click = handle.is_mouse_button_released(MouseButton::MOUSE_BUTTON_RIGHT);
         let x = handle.get_mouse_x();
         let y = handle.get_mouse_y();
         let mouse = Vector2::new(x as f32, y as f32);
@@ -130,6 +132,8 @@ impl Scene for GameplayScene {
             self.cell_size.y
         } * 0.75
             - 2.0;
+
+        // Draw hhints and vertical lines
         for i in 0..(self.size.x as usize) {
             let x = self.hhints_rect.x + (i as f32 * self.cell_size.x);
             let mut y = 0.0;
@@ -170,6 +174,7 @@ impl Scene for GameplayScene {
             Color::DARKGRAY,
         );
 
+        // Draw vhints and horizontal lines
         for i in 0..(self.size.y as usize) {
             let y = self.vhints_rect.y + (i as f32 * self.cell_size.y);
             let text = &self.vhints[i];
@@ -206,6 +211,59 @@ impl Scene for GameplayScene {
             2.0,
             Color::DARKGRAY,
         );
+
+        for y in 0..(self.size.y as usize) {
+            for x in 0..(self.size.x as usize) {
+                let current_rect = Rectangle {
+                    x: self.board_rect.x + (x as f32) * self.cell_size.x + 1.0,
+                    y: self.board_rect.y + (y as f32) * self.cell_size.y + 1.0,
+                    width: self.cell_size.x - 2.0,
+                    height: self.cell_size.y - 2.0,
+                };
+
+                if left_click && current_rect.check_collision_point_rec(mouse) {
+                    match self.board.get(x, y).unwrap() {
+                        Cell::Yes => self.board.set(x, y, Cell::Closed).unwrap(),
+                        _ => self.board.set(x, y, Cell::Yes).unwrap(),
+                    }
+                }
+                if right_click && current_rect.check_collision_point_rec(mouse) {
+                    match self.board.get(x, y).unwrap() {
+                        Cell::No => self.board.set(x, y, Cell::Closed).unwrap(),
+                        _ => self.board.set(x, y, Cell::No).unwrap(),
+                    }
+                }
+
+                match self.board.get(x, y).unwrap() {
+                    Cell::No => {
+                        draw.draw_line(
+                            current_rect.x as i32,
+                            current_rect.y as i32,
+                            (current_rect.x + current_rect.width) as i32,
+                            (current_rect.y + current_rect.height) as i32,
+                            Color::DARKGRAY,
+                        );
+                        draw.draw_line(
+                            current_rect.x as i32,
+                            (current_rect.y + current_rect.height) as i32,
+                            (current_rect.x + current_rect.width) as i32,
+                            current_rect.y as i32,
+                            Color::DARKGRAY,
+                        );
+                    }
+                    Cell::Yes => {
+                        draw.draw_rectangle(
+                            current_rect.x as i32,
+                            current_rect.y as i32,
+                            current_rect.width as i32,
+                            current_rect.height as i32,
+                            Color::DARKBLUE,
+                        );
+                    }
+                    Cell::Closed => (), // do nothing
+                }
+            }
+        }
 
         State::Keep
     }

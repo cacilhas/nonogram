@@ -1,4 +1,4 @@
-use std::process::Command;
+use std::{env, process::Command};
 
 use raylib::prelude::*;
 use walkdir::WalkDir;
@@ -57,6 +57,9 @@ fn find_gnome_font() -> anyhow::Result<Vec<String>> {
 
 #[dynamic]
 static FONT_DIRS: [String; 2] = [
-    format!("{}/fonts", env!["XDG_DATA_HOME"]),
+    format!(
+        "{}/fonts",
+        env::var("XDG_DATA_HOME").unwrap_or(format!("{}/.local/share", env!["HOME"]))
+    ),
     "/usr/share/fonts".to_owned(),
 ];

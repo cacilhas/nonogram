@@ -63,7 +63,7 @@ fn find_gnome_font() -> anyhow::Result<Vec<String>> {
 }
 #[cfg(target_os = "macos")]
 fn find_gnome_font() -> anyhow::Result<Vec<String>> {
-    Ok(vec!["SFCompactRounded.ttf"])
+    Ok(vec!["SFCompactRounded.ttf".to_owned()])
 }
 
 #[cfg(target_os = "linux")]

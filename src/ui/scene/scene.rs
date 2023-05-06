@@ -6,7 +6,7 @@ use chrono::Duration;
 
 use raylib::prelude::*;
 
-pub trait Stage {
+pub trait Scene {
     #[allow(unused_variables)]
     fn init(
         &mut self,

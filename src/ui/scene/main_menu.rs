@@ -3,19 +3,19 @@ use std::rc::Rc;
 
 use crate::game::BoardStruct;
 
-use super::gameplay::GameplayStage;
-use super::{Stage, State};
+use super::gameplay::GameplayScene;
+use super::{Scene, State};
 use raylib::prelude::*;
 use raylib::{ffi, text::measure_text_ex};
 
 #[derive(Debug)]
-pub struct MainMenuStage {
+pub struct MainMenuScene {
     rect: Rectangle,
     font: Rc<Font>,
     hints: bool,
 }
 
-impl Default for MainMenuStage {
+impl Default for MainMenuScene {
     fn default() -> Self {
         let font = unsafe { ffi::GetFontDefault() };
         let font = unsafe { Font::from_raw(font) };
@@ -27,7 +27,7 @@ impl Default for MainMenuStage {
     }
 }
 
-impl Stage for MainMenuStage {
+impl Scene for MainMenuScene {
     fn init(
         &mut self,
         handle: &mut RaylibHandle,
@@ -152,17 +152,17 @@ impl Stage for MainMenuStage {
 
             if button_5x5.check_collision_point_rec(mouse) {
                 let board = Box::new(BoardStruct::<5, 5>::random(self.hints));
-                return State::New(Rc::new(RefCell::new(GameplayStage::new(board))));
+                return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
             }
 
             if button_10x10.check_collision_point_rec(mouse) {
                 let board = Box::new(BoardStruct::<10, 10>::random(self.hints));
-                return State::New(Rc::new(RefCell::new(GameplayStage::new(board))));
+                return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
             }
 
             if button_15x15.check_collision_point_rec(mouse) {
                 let board = Box::new(BoardStruct::<15, 15>::random(self.hints));
-                return State::New(Rc::new(RefCell::new(GameplayStage::new(board))));
+                return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
             }
         }
 

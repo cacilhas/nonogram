@@ -11,6 +11,6 @@ pub mod prelude {
     pub use crate::game::{Board, Cell};
     pub use crate::ui::{
         fonts,
-        stage::{main_menu::MainMenuStage, Stage, State},
+        scene::{main_menu::MainMenuScene, Scene, State},
     };
 }

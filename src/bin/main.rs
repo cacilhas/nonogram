@@ -33,9 +33,9 @@ fn main() -> anyhow::Result<()> {
     handle.set_exit_key(Some(KeyboardKey::KEY_ESCAPE));
 
     let font: Rc<Font> = fonts::get_font(&mut handle, &thr)?.into();
-    let mut main_scene = MainMenuStage::default();
+    let mut main_scene = MainMenuScene::default();
     main_scene.init(&mut handle, &thr, screen_rect, font.clone());
-    let mut scenes: Vec<Rc<RefCell<dyn Stage>>> = vec![Rc::new(RefCell::new(main_scene))];
+    let mut scenes: Vec<Rc<RefCell<dyn Scene>>> = vec![Rc::new(RefCell::new(main_scene))];
     let mut tick = Utc::now();
 
     while !handle.window_should_close() {

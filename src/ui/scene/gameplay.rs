@@ -5,9 +5,9 @@ use raylib::prelude::*;
 
 use crate::game::Board;
 
-use super::{Stage, State};
+use super::{Scene, State};
 
-pub struct GameplayStage {
+pub struct GameplayScene {
     board: Box<dyn Board>,
     hhints: Vec<String>,
     vhints: Vec<String>,
@@ -20,7 +20,7 @@ pub struct GameplayStage {
     cell_size: Vector2,
 }
 
-impl GameplayStage {
+impl GameplayScene {
     pub fn new(board: Box<dyn Board>) -> Self {
         let (w, h) = board.size();
         let size = Vector2::new(w as f32, h as f32);
@@ -63,7 +63,7 @@ impl GameplayStage {
     }
 }
 
-impl Stage for GameplayStage {
+impl Scene for GameplayScene {
     fn init(
         &mut self,
         handle: &mut raylib::RaylibHandle,

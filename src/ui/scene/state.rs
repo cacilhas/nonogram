@@ -1,9 +1,9 @@
 use std::{cell::RefCell, rc::Rc};
 
-use super::stage::Stage;
+use super::scene::Scene;
 
 pub enum State {
     Keep,
-    New(Rc<RefCell<dyn Stage>>),
+    New(Rc<RefCell<dyn Scene>>),
     Previous,
 }

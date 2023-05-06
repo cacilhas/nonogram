@@ -1,7 +1,7 @@
 pub mod gameplay;
 pub mod main_menu;
-mod stage;
+mod scene;
 mod state;
 
-pub use stage::Stage;
+pub use scene::Scene;
 pub use state::State;

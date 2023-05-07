@@ -328,16 +328,38 @@ impl Scene for GameplayScene {
             self.time_lapse.num_minutes(),
             self.time_lapse.num_seconds()
         );
-        let size = measure_text_ex(self.font.as_ref(), &time, 12.0, 2.0);
-        draw.draw_text_ex(
-            self.font.as_ref(),
+        //let size = measure_text_ex(self.font.as_ref(), &time, 12.0, 2.0);
+        monospace(
+            &mut draw,
+            self.font.clone(),
             &time,
-            Vector2::new(self.window.width - size.x - 4.0, 4.0),
+            Vector2::new(self.window.width - 96.0, 4.0),
             12.0,
-            2.0,
             Color::DARKGRAY,
         );
 
         State::Keep
+    }
+}
+
+fn monospace(
+    draw: &mut RaylibMode2D<'_, RaylibDrawHandle>,
+    font: Rc<Font>,
+    text: &str,
+    position: Vector2,
+    font_size: f32,
+    tint: Color,
+) {
+    for (i, c) in text.as_bytes().iter().enumerate() {
+        let x = position.x + (i as f32) * font_size;
+        let y = position.y;
+        draw.draw_text_ex(
+            font.as_ref(),
+            &char::from(*c).to_string(),
+            Vector2::new(x, y),
+            font_size,
+            0.0,
+            tint,
+        );
     }
 }

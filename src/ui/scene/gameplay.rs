@@ -140,6 +140,15 @@ impl Scene for GameplayScene {
         // Draw hhints and vertical lines
         for i in 0..(self.size.x as usize) {
             let x = self.hhints_rect.x + (i as f32 * self.cell_size.x);
+            if i % 2 == 0 {
+                draw.draw_rectangle(
+                    (x - self.cell_size.x / 2.0) as i32,
+                    0,
+                    self.cell_size.x as i32,
+                    self.hhints_rect.height as i32,
+                    Color::LIGHTGRAY,
+                );
+            }
             let mut y = 0.0;
             for text in self.hhints[i].split(' ') {
                 draw.draw_text_ex(
@@ -185,6 +194,15 @@ impl Scene for GameplayScene {
         // Draw vhints and horizontal lines
         for i in 0..(self.size.y as usize) {
             let y = self.vhints_rect.y + (i as f32 * self.cell_size.y) + 4.0;
+            if i % 2 == 0 {
+                draw.draw_rectangle(
+                    self.board_rect.width as i32 + 2,
+                    y as i32 - 4,
+                    self.vhints_rect.width as i32,
+                    self.cell_size.y as i32,
+                    Color::LIGHTGRAY,
+                );
+            }
             let text = &self.vhints[i];
             draw.draw_text_ex(
                 self.font.as_ref(),

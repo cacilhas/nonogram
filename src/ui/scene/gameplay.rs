@@ -19,6 +19,7 @@ pub struct GameplayScene {
     hhints_rect: Rectangle,
     vhints_rect: Rectangle,
     cell_size: Vector2,
+    time_lapse: chrono::Duration,
 }
 
 impl GameplayScene {
@@ -60,6 +61,7 @@ impl GameplayScene {
             hhints_rect: Rectangle::default(),
             vhints_rect: Rectangle::default(),
             cell_size: Vector2::default(),
+            time_lapse: chrono::Duration::zero(),
         }
     }
 }
@@ -102,7 +104,7 @@ impl Scene for GameplayScene {
 
     fn update(
         &mut self,
-        _: chrono::Duration,
+        dt: chrono::Duration,
         handle: &mut raylib::RaylibHandle,
         thr: &raylib::RaylibThread,
     ) -> State {
@@ -316,7 +318,25 @@ impl Scene for GameplayScene {
                     }
                 }
             }
+        } else {
+            self.time_lapse = self.time_lapse.checked_add(&dt).unwrap();
         }
+
+        let time = format!(
+            "{:02}:{:02}:{:02}",
+            self.time_lapse.num_hours(),
+            self.time_lapse.num_minutes(),
+            self.time_lapse.num_seconds()
+        );
+        let size = measure_text_ex(self.font.as_ref(), &time, 12.0, 2.0);
+        draw.draw_text_ex(
+            self.font.as_ref(),
+            &time,
+            Vector2::new(self.window.width - size.x - 4.0, 4.0),
+            12.0,
+            2.0,
+            Color::DARKGRAY,
+        );
 
         State::Keep
     }

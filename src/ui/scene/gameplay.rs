@@ -64,6 +64,125 @@ impl GameplayScene {
             time_lapse: chrono::Duration::zero(),
         }
     }
+
+    fn draw_lines(&self, draw: &mut RaylibMode2D<'_, RaylibDrawHandle>) {
+        let font_size = if self.cell_size.x < self.cell_size.y {
+            self.cell_size.x
+        } else {
+            self.cell_size.y
+        } * 0.75
+            - 2.0;
+
+        self.draw_vertical_lines(draw, font_size);
+        self.draw_horizontal_lines(draw, font_size);
+    }
+
+    fn draw_vertical_lines(&self, draw: &mut RaylibMode2D<'_, RaylibDrawHandle>, font_size: f32) {
+        for i in 0..(self.size.x as usize) {
+            let x = self.hhints_rect.x + (i as f32 * self.cell_size.x);
+            if i % 2 == 0 {
+                draw.draw_rectangle(
+                    (x - self.cell_size.x / 2.0) as i32,
+                    0,
+                    self.cell_size.x as i32,
+                    self.hhints_rect.height as i32,
+                    Color::LIGHTGRAY,
+                );
+            }
+            let mut y = 0.0;
+            for text in self.hhints[i].split(' ') {
+                draw.draw_text_ex(
+                    self.font.as_ref(),
+                    text,
+                    Vector2::new(x, y),
+                    font_size,
+                    1.0,
+                    Color::BLACK,
+                );
+                y += font_size;
+            }
+            draw.draw_line_ex(
+                Vector2::new(
+                    self.board_rect.x + (i as f32 * self.cell_size.x),
+                    self.board_rect.y,
+                ),
+                Vector2::new(
+                    self.board_rect.x + (i as f32 * self.cell_size.x),
+                    self.board_rect.y + (self.size.y * self.cell_size.y),
+                ),
+                2.0,
+                if i % 5 == 0 {
+                    Color::BLACK
+                } else {
+                    Color::DARKGRAY
+                },
+            );
+        }
+        draw.draw_line_ex(
+            Vector2::new(
+                self.board_rect.x + (self.size.y * self.cell_size.x),
+                self.board_rect.y,
+            ),
+            Vector2::new(
+                self.board_rect.x + (self.size.x * self.cell_size.x),
+                self.board_rect.y + (self.size.y * self.cell_size.y),
+            ),
+            2.0,
+            Color::BLACK,
+        );
+    }
+
+    fn draw_horizontal_lines(&self, draw: &mut RaylibMode2D<'_, RaylibDrawHandle>, font_size: f32) {
+        for i in 0..(self.size.y as usize) {
+            let y = self.vhints_rect.y + (i as f32 * self.cell_size.y) + 4.0;
+            if i % 2 == 0 {
+                draw.draw_rectangle(
+                    self.board_rect.width as i32 + 2,
+                    y as i32 - 4,
+                    self.vhints_rect.width as i32,
+                    self.cell_size.y as i32,
+                    Color::LIGHTGRAY,
+                );
+            }
+            let text = &self.vhints[i];
+            draw.draw_text_ex(
+                self.font.as_ref(),
+                text,
+                Vector2::new(self.vhints_rect.x, y),
+                font_size,
+                1.0,
+                Color::BLACK,
+            );
+            draw.draw_line_ex(
+                Vector2::new(
+                    self.board_rect.x,
+                    self.board_rect.y + (i as f32 * self.cell_size.y),
+                ),
+                Vector2::new(
+                    self.board_rect.x + (self.size.y * self.cell_size.x),
+                    self.board_rect.y + (i as f32 * self.cell_size.y),
+                ),
+                2.0,
+                if i % 5 == 0 {
+                    Color::BLACK
+                } else {
+                    Color::DARKGRAY
+                },
+            );
+        }
+        draw.draw_line_ex(
+            Vector2::new(
+                self.board_rect.x,
+                self.board_rect.y + (self.size.y * self.cell_size.y),
+            ),
+            Vector2::new(
+                self.board_rect.x + (self.size.x * self.cell_size.x),
+                self.board_rect.y + (self.size.y * self.cell_size.y),
+            ),
+            2.0,
+            Color::BLACK,
+        );
+    }
 }
 
 impl Scene for GameplayScene {
@@ -132,117 +251,7 @@ impl Scene for GameplayScene {
         let background_color = Color::WHEAT;
         draw.clear_background(background_color);
 
-        let font_size = if self.cell_size.x < self.cell_size.y {
-            self.cell_size.x
-        } else {
-            self.cell_size.y
-        } * 0.75
-            - 2.0;
-
-        // Draw hhints and vertical lines
-        for i in 0..(self.size.x as usize) {
-            let x = self.hhints_rect.x + (i as f32 * self.cell_size.x);
-            if i % 2 == 0 {
-                draw.draw_rectangle(
-                    (x - self.cell_size.x / 2.0) as i32,
-                    0,
-                    self.cell_size.x as i32,
-                    self.hhints_rect.height as i32,
-                    Color::LIGHTGRAY,
-                );
-            }
-            let mut y = 0.0;
-            for text in self.hhints[i].split(' ') {
-                draw.draw_text_ex(
-                    self.font.as_ref(),
-                    text,
-                    Vector2::new(x, y),
-                    font_size,
-                    1.0,
-                    Color::BLACK,
-                );
-                y += font_size;
-            }
-            draw.draw_line_ex(
-                Vector2::new(
-                    self.board_rect.x + (i as f32 * self.cell_size.x),
-                    self.board_rect.y,
-                ),
-                Vector2::new(
-                    self.board_rect.x + (i as f32 * self.cell_size.x),
-                    self.board_rect.y + (self.size.y * self.cell_size.y),
-                ),
-                2.0,
-                if i % 5 == 0 {
-                    Color::BLACK
-                } else {
-                    Color::DARKGRAY
-                },
-            );
-        }
-        draw.draw_line_ex(
-            Vector2::new(
-                self.board_rect.x + (self.size.y * self.cell_size.x),
-                self.board_rect.y,
-            ),
-            Vector2::new(
-                self.board_rect.x + (self.size.x * self.cell_size.x),
-                self.board_rect.y + (self.size.y * self.cell_size.y),
-            ),
-            2.0,
-            Color::BLACK,
-        );
-
-        // Draw vhints and horizontal lines
-        for i in 0..(self.size.y as usize) {
-            let y = self.vhints_rect.y + (i as f32 * self.cell_size.y) + 4.0;
-            if i % 2 == 0 {
-                draw.draw_rectangle(
-                    self.board_rect.width as i32 + 2,
-                    y as i32 - 4,
-                    self.vhints_rect.width as i32,
-                    self.cell_size.y as i32,
-                    Color::LIGHTGRAY,
-                );
-            }
-            let text = &self.vhints[i];
-            draw.draw_text_ex(
-                self.font.as_ref(),
-                text,
-                Vector2::new(self.vhints_rect.x, y),
-                font_size,
-                1.0,
-                Color::BLACK,
-            );
-            draw.draw_line_ex(
-                Vector2::new(
-                    self.board_rect.x,
-                    self.board_rect.y + (i as f32 * self.cell_size.y),
-                ),
-                Vector2::new(
-                    self.board_rect.x + (self.size.y * self.cell_size.x),
-                    self.board_rect.y + (i as f32 * self.cell_size.y),
-                ),
-                2.0,
-                if i % 5 == 0 {
-                    Color::BLACK
-                } else {
-                    Color::DARKGRAY
-                },
-            );
-        }
-        draw.draw_line_ex(
-            Vector2::new(
-                self.board_rect.x,
-                self.board_rect.y + (self.size.y * self.cell_size.y),
-            ),
-            Vector2::new(
-                self.board_rect.x + (self.size.x * self.cell_size.x),
-                self.board_rect.y + (self.size.y * self.cell_size.y),
-            ),
-            2.0,
-            Color::BLACK,
-        );
+        self.draw_lines(&mut draw);
 
         for y in 0..(self.size.y as usize) {
             for x in 0..(self.size.x as usize) {

@@ -20,6 +20,7 @@ pub struct GameplayScene {
     vhints_rect: Rectangle,
     cell_size: Vector2,
     time_lapse: chrono::Duration,
+    vic_index: f32,
 }
 
 impl GameplayScene {
@@ -62,6 +63,7 @@ impl GameplayScene {
             vhints_rect: Rectangle::default(),
             cell_size: Vector2::default(),
             time_lapse: chrono::Duration::zero(),
+            vic_index: 0.0,
         }
     }
 
@@ -315,10 +317,19 @@ impl Scene for GameplayScene {
         self.draw_lines(&mut draw);
 
         if self.board.is_done() {
+            let size = measure_text("V", 240) as f32;
+            let rect = Rectangle {
+                x: self.vhints_rect.x,
+                y: self.window.y,
+                width: size,
+                height: 240.0,
+            };
+            let text = VICTORY[self.vic_index as usize % VICTORY.len()];
+            let size = measure_text(text, 240) as f32;
             draw.draw_text_ex(
                 self.font.as_ref(),
-                "V",
-                Vector2::new(self.vhints_rect.x, self.window.y),
+                text,
+                Vector2::new(rect.x + (rect.width - size) / 2.0, rect.y),
                 240.0,
                 0.0,
                 Color::GREEN,
@@ -330,6 +341,8 @@ impl Scene for GameplayScene {
                     }
                 }
             }
+            self.vic_index +=
+                ((dt.num_seconds() as f32) + (dt.num_milliseconds() as f32 / 1_000.0)) * 5.0;
         } else {
             self.time_lapse = self.time_lapse.checked_add(&dt).unwrap();
         }
@@ -375,3 +388,5 @@ fn monospace(
         );
     }
 }
+
+static VICTORY: [&'static str; 6] = ["V", "v", ",", ".", ",", "v"];

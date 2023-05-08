@@ -389,4 +389,4 @@ fn monospace(
     }
 }
 
-static VICTORY: [&'static str; 6] = ["V", "v", ",", ".", ",", "v"];
+static VICTORY: [&'static str; 6] = ["W", "w", "v", ".", "v", "w"];

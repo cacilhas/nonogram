@@ -251,28 +251,29 @@ impl Scene for GameplayScene {
         let background_color = Color::WHEAT;
         draw.clear_background(background_color);
 
-        self.draw_lines(&mut draw);
-
         for y in 0..(self.size.y as usize) {
             for x in 0..(self.size.x as usize) {
                 let current_rect = Rectangle {
-                    x: self.board_rect.x + (x as f32) * self.cell_size.x + 1.0,
-                    y: self.board_rect.y + (y as f32) * self.cell_size.y + 1.0,
-                    width: self.cell_size.x - 2.0,
-                    height: self.cell_size.y - 2.0,
+                    x: self.board_rect.x + (x as f32) * self.cell_size.x,
+                    y: self.board_rect.y + (y as f32) * self.cell_size.y,
+                    width: self.cell_size.x,
+                    height: self.cell_size.y,
                 };
 
-                if left_click && current_rect.check_collision_point_rec(mouse) {
-                    match self.board.get(x, y).unwrap() {
-                        Cell::Yes => self.board.set(x, y, Cell::Closed).unwrap(),
-                        Cell::Closed => self.board.set(x, y, Cell::Yes).unwrap(),
-                        Cell::No => (),
+                if !self.board.is_done() {
+                    if left_click && current_rect.check_collision_point_rec(mouse) {
+                        match self.board.get(x, y).unwrap() {
+                            Cell::Yes => self.board.set(x, y, Cell::Closed).unwrap(),
+                            Cell::Closed => self.board.set(x, y, Cell::Yes).unwrap(),
+                            Cell::No => (),
+                        }
                     }
-                }
-                if right_click && current_rect.check_collision_point_rec(mouse) {
-                    match self.board.get(x, y).unwrap() {
-                        Cell::No => self.board.set(x, y, Cell::Closed).unwrap(),
-                        _ => self.board.set(x, y, Cell::No).unwrap(),
+                    if right_click && current_rect.check_collision_point_rec(mouse) {
+                        match self.board.get(x, y).unwrap() {
+                            Cell::No => self.board.set(x, y, Cell::Closed).unwrap(),
+                            Cell::Closed => self.board.set(x, y, Cell::No).unwrap(),
+                            Cell::Yes => (),
+                        }
                     }
                 }
 
@@ -310,6 +311,8 @@ impl Scene for GameplayScene {
                 }
             }
         }
+
+        self.draw_lines(&mut draw);
 
         if self.board.is_done() {
             draw.draw_text_ex(

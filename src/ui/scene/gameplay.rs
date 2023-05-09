@@ -350,8 +350,8 @@ impl Scene for GameplayScene {
         let time = format!(
             "{:02}:{:02}:{:02}",
             self.time_lapse.num_hours(),
-            self.time_lapse.num_minutes(),
-            self.time_lapse.num_seconds()
+            self.time_lapse.num_minutes() % 60,
+            self.time_lapse.num_seconds() % 60,
         );
         //let size = measure_text_ex(self.font.as_ref(), &time, 12.0, 2.0);
         monospace(

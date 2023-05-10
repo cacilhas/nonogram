@@ -204,6 +204,28 @@ impl GameplayScene {
             Color::BLACK,
         );
     }
+
+    fn draw_info(&self, draw: &mut RaylibMode2D<'_, RaylibDrawHandle>) {
+        let x = self.window.width - 132.0;
+        let mut y = 28.0;
+        draw.draw_text_ex(
+            self.font.as_ref(),
+            "F2 mute/unmute",
+            Vector2::new(x, y),
+            12.0,
+            1.0,
+            Color::GRAY,
+        );
+        y += 14.0;
+        draw.draw_text_ex(
+            self.font.as_ref(),
+            "ESC get back to menu",
+            Vector2::new(x, y),
+            12.0,
+            1.0,
+            Color::GRAY,
+        );
+    }
 }
 
 impl Scene for GameplayScene {
@@ -259,6 +281,10 @@ impl Scene for GameplayScene {
         let x = handle.get_mouse_x();
         let y = handle.get_mouse_y();
         let mouse = Vector2::new(x as f32, y as f32);
+
+        if handle.is_key_released(KeyboardKey::KEY_F2) {
+            self.mute = !self.mute;
+        }
 
         if handle.is_key_released(KeyboardKey::KEY_ESCAPE) {
             return State::Previous;
@@ -400,6 +426,25 @@ impl Scene for GameplayScene {
             12.0,
             Color::DARKGRAY,
         );
+        if self.mute {
+            draw.draw_text_ex(
+                self.font.as_ref(),
+                "M",
+                Vector2::new(self.window.width - 112.0, 4.0),
+                12.0,
+                0.0,
+                Color::RED,
+            );
+            draw.draw_text_ex(
+                self.font.as_ref(),
+                "\\",
+                Vector2::new(self.window.width - 112.0, 4.0),
+                12.0,
+                0.0,
+                Color::RED,
+            );
+        }
+        self.draw_info(&mut draw);
 
         State::Keep
     }

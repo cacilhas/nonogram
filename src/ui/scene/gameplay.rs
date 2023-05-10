@@ -220,7 +220,7 @@ impl GameplayScene {
         y += 14.0;
         draw.draw_text_ex(
             self.font.as_ref(),
-            "F3 to pause",
+            "F3 pause",
             Vector2::new(x, y),
             12.0,
             1.0,

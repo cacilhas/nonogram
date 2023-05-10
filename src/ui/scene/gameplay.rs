@@ -206,7 +206,8 @@ impl GameplayScene {
     }
 
     fn draw_info(&self, draw: &mut RaylibMode2D<'_, RaylibDrawHandle>) {
-        let x = self.window.width - 148.0;
+        let size = measure_text_ex(self.font.as_ref(), "F2 mute/unmute", 12.0, 1.0);
+        let x = self.window.width - size.x - 4.0;
         let mut y = 28.0;
         draw.draw_text_ex(
             self.font.as_ref(),
@@ -228,7 +229,7 @@ impl GameplayScene {
         y += 14.0;
         draw.draw_text_ex(
             self.font.as_ref(),
-            "ESC abort back to menu",
+            "ESC abort",
             Vector2::new(x, y),
             12.0,
             1.0,

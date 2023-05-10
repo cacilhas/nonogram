@@ -63,52 +63,35 @@ impl Scene for Pause {
         let background_color = Color::WHEAT;
         draw.clear_background(background_color);
 
-        let size = measure_text_ex(self.font.as_ref(), "Nonogram", 84.0, 2.0);
+        let text = "Nonogram";
+        let size = measure_text_ex(self.font.as_ref(), text, 84.0, 2.0);
         let position = Vector2::new((self.window.width - size.x) / 2.0, 0.0);
         let bottom = size.y + 64.0;
         draw.draw_text_ex(
             self.font.as_ref(),
-            "Nonogram",
+            text,
             position,
             84.0,
             2.0,
             Color::DARKCYAN,
         );
 
-        let size = measure_text_ex(self.font.as_ref(), "PAUSED", 84.0, 2.0);
+        let text = "PAUSED";
+        let size = measure_text_ex(self.font.as_ref(), text, 84.0, 2.0);
         let position = Vector2::new((self.window.width - size.x) / 2.0, bottom);
         let bottom = bottom + size.y + 64.0;
-        draw.draw_text_ex(
-            self.font.as_ref(),
-            "PAUSED",
-            position,
-            84.0,
-            2.0,
-            Color::BROWN,
-        );
+        draw.draw_text_ex(self.font.as_ref(), text, position, 84.0, 2.0, Color::BROWN);
 
-        let size = measure_text_ex(self.font.as_ref(), "F3 get back to game", 32.0, 2.0);
+        let text = "F3 resume game";
+        let size = measure_text_ex(self.font.as_ref(), text, 32.0, 2.0);
         let position = Vector2::new((self.window.width - size.x) / 2.0, bottom);
         let bottom = bottom + size.y + 32.0;
-        draw.draw_text_ex(
-            self.font.as_ref(),
-            "F3 get back to game",
-            position,
-            32.0,
-            2.0,
-            Color::BLACK,
-        );
+        draw.draw_text_ex(self.font.as_ref(), text, position, 32.0, 2.0, Color::BLACK);
 
-        let size = measure_text_ex(self.font.as_ref(), "ESC abort back to menu", 32.0, 2.0);
+        let text = "ESC abort";
+        let size = measure_text_ex(self.font.as_ref(), text, 32.0, 2.0);
         let position = Vector2::new((self.window.width - size.x) / 2.0, bottom);
-        draw.draw_text_ex(
-            self.font.as_ref(),
-            "ESC abort back to menu",
-            position,
-            32.0,
-            2.0,
-            Color::BLACK,
-        );
+        draw.draw_text_ex(self.font.as_ref(), text, position, 32.0, 2.0, Color::BLACK);
 
         self.time_lapse = self.time_lapse.checked_add(&dt).unwrap();
         State::Keep

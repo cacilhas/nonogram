@@ -164,6 +164,25 @@ impl Scene for MainMenuScene {
                 let board = Box::new(BoardStruct::<15, 15>::random(self.hints));
                 return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
             }
+        } else {
+            if draw.is_key_released(KeyboardKey::KEY_H) {
+                self.hints = !self.hints;
+            }
+
+            if draw.is_key_released(KeyboardKey::KEY_ONE) {
+                let board = Box::new(BoardStruct::<5, 5>::random(self.hints));
+                return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
+            }
+
+            if draw.is_key_released(KeyboardKey::KEY_TWO) {
+                let board = Box::new(BoardStruct::<10, 10>::random(self.hints));
+                return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
+            }
+
+            if draw.is_key_released(KeyboardKey::KEY_THREE) {
+                let board = Box::new(BoardStruct::<15, 15>::random(self.hints));
+                return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
+            }
         }
 
         State::Keep

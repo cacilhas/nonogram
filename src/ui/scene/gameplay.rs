@@ -27,6 +27,7 @@ pub struct GameplayScene {
     time_lapse: chrono::Duration,
     vic_index: f32,
     mute: bool,
+    done: bool,
 }
 
 impl GameplayScene {
@@ -73,6 +74,7 @@ impl GameplayScene {
             time_lapse: chrono::Duration::zero(),
             vic_index: 0.0,
             mute: false,
+            done: false,
         }
     }
 
@@ -374,6 +376,11 @@ impl Scene for GameplayScene {
             }
             self.vic_index +=
                 ((dt.num_seconds() as f32) + (dt.num_milliseconds() as f32 / 1_000.0)) * 5.0;
+
+            if !self.done {
+                self.done = true;
+                self.play(&SfxType::CLAPPING);
+            }
         } else {
             self.time_lapse = self.time_lapse.checked_add(&dt).unwrap();
         }

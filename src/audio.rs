@@ -1,6 +1,7 @@
 use raylib::prelude::*;
 
 pub enum SfxType {
+    CLAPPING,
     ERROR,
     LOCK,
     SET,
@@ -8,6 +9,7 @@ pub enum SfxType {
 }
 
 pub struct Sfx {
+    clapping: Option<Sound>,
     error: Option<Sound>,
     lock: Option<Sound>,
     set: Option<Sound>,
@@ -17,6 +19,7 @@ pub struct Sfx {
 impl Default for Sfx {
     fn default() -> Self {
         Self {
+            clapping: Self::load_sound(include_bytes!("assets/clapping.wav")),
             error: Self::load_sound(include_bytes!("assets/error.wav")),
             lock: Self::load_sound(include_bytes!("assets/lock.wav")),
             set: Self::load_sound(include_bytes!("assets/set.wav")),
@@ -28,6 +31,7 @@ impl Default for Sfx {
 impl Sfx {
     pub fn play(&self, audio: &mut RaylibAudio, tpe: &SfxType) {
         let sound = match tpe {
+            SfxType::CLAPPING => &self.clapping,
             SfxType::ERROR => &self.error,
             SfxType::LOCK => &self.lock,
             SfxType::SET => &self.set,

@@ -23,6 +23,7 @@ fn main() -> anyhow::Result<()> {
         .size(width, height)
         .title("nonogram") // WM_CLASS
         .build();
+    let audio = raylib::audio::RaylibAudio::init_audio_device();
     handle.set_target_fps(30);
     handle.set_window_title(&thr, "Nonogram");
     handle.get_window_state().set_fullscreen_mode(true);
@@ -45,8 +46,8 @@ fn main() -> anyhow::Result<()> {
         match state {
             State::New(scene) => {
                 scene
-                        .borrow_mut()
-                        .init(&mut handle, &thr, screen_rect, font.clone());
+                    .borrow_mut()
+                    .init(&mut handle, &thr, screen_rect, font.clone());
                 scenes.push(scene);
             }
             State::Previous => {

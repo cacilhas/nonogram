@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate static_init;
 
+pub mod audio;
 pub mod error;
 pub mod game;
 pub mod ui;

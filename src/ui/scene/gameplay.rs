@@ -1,14 +1,19 @@
+use std::cell::RefCell;
 use std::rc::Rc;
 
-use raylib::ffi;
 use raylib::prelude::*;
 
+use crate::audio::Sfx;
+use crate::audio::SfxType;
 use crate::game::Board;
 use crate::game::Cell;
 
+use super::pause::Pause;
 use super::{Scene, State};
 
 pub struct GameplayScene {
+    audio: Option<Rc<RefCell<RaylibAudio>>>,
+    sfx: Sfx,
     board: Box<dyn Board>,
     hhints: Vec<String>,
     vhints: Vec<String>,
@@ -21,6 +26,8 @@ pub struct GameplayScene {
     cell_size: Vector2,
     time_lapse: chrono::Duration,
     vic_index: f32,
+    mute: bool,
+    done: bool,
 }
 
 impl GameplayScene {
@@ -56,6 +63,8 @@ impl GameplayScene {
             size,
             hhints,
             vhints,
+            audio: None,
+            sfx: Sfx::default(),
             font: font.into(),
             window: Rectangle::default(),
             board_rect: Rectangle::default(),
@@ -64,6 +73,16 @@ impl GameplayScene {
             cell_size: Vector2::default(),
             time_lapse: chrono::Duration::zero(),
             vic_index: 0.0,
+            mute: false,
+            done: false,
+        }
+    }
+
+    fn play(&self, tpe: &SfxType) {
+        if !self.mute {
+            if let Some(audio) = &self.audio {
+                self.sfx.play(&mut audio.borrow_mut(), tpe);
+            }
         }
     }
 
@@ -185,6 +204,37 @@ impl GameplayScene {
             Color::BLACK,
         );
     }
+
+    fn draw_info(&self, draw: &mut RaylibMode2D<'_, RaylibDrawHandle>) {
+        let x = self.window.width - 148.0;
+        let mut y = 28.0;
+        draw.draw_text_ex(
+            self.font.as_ref(),
+            "F2 mute/unmute",
+            Vector2::new(x, y),
+            12.0,
+            1.0,
+            Color::GRAY,
+        );
+        y += 14.0;
+        draw.draw_text_ex(
+            self.font.as_ref(),
+            "F3 to pause",
+            Vector2::new(x, y),
+            12.0,
+            1.0,
+            Color::GRAY,
+        );
+        y += 14.0;
+        draw.draw_text_ex(
+            self.font.as_ref(),
+            "ESC abort back to menu",
+            Vector2::new(x, y),
+            12.0,
+            1.0,
+            Color::GRAY,
+        );
+    }
 }
 
 impl Scene for GameplayScene {
@@ -194,9 +244,11 @@ impl Scene for GameplayScene {
         _: &raylib::RaylibThread,
         rect: raylib::prelude::Rectangle,
         font: Rc<Font>,
+        audio: Rc<RefCell<RaylibAudio>>,
     ) {
         handle.set_exit_key(None);
         self.font = font;
+        self.audio = Some(audio);
         self.window = rect;
         self.board_rect = Rectangle {
             x: rect.x,
@@ -239,8 +291,16 @@ impl Scene for GameplayScene {
         let y = handle.get_mouse_y();
         let mouse = Vector2::new(x as f32, y as f32);
 
+        if handle.is_key_released(KeyboardKey::KEY_F2) {
+            self.mute = !self.mute;
+        }
+
+        if handle.is_key_released(KeyboardKey::KEY_F3) && !self.board.is_done() {
+            return State::New(Rc::new(RefCell::new(Pause::default())));
+        }
+
         if handle.is_key_released(KeyboardKey::KEY_ESCAPE) {
-            return State::Previous;
+            return State::Previous(1);
         }
 
         let camera = Camera2D {
@@ -265,16 +325,28 @@ impl Scene for GameplayScene {
                 if !self.board.is_done() {
                     if left_click && current_rect.check_collision_point_rec(mouse) {
                         match self.board.get(x, y).unwrap() {
-                            Cell::Yes => self.board.set(x, y, Cell::Closed).unwrap(),
-                            Cell::Closed => self.board.set(x, y, Cell::Yes).unwrap(),
-                            Cell::No => (),
+                            Cell::Yes => {
+                                self.board.set(x, y, Cell::Closed).unwrap();
+                                self.play(&SfxType::UNSET);
+                            }
+                            Cell::Closed => {
+                                self.board.set(x, y, Cell::Yes).unwrap();
+                                self.play(&SfxType::SET);
+                            }
+                            Cell::No => self.play(&SfxType::ERROR),
                         }
                     }
                     if right_click && current_rect.check_collision_point_rec(mouse) {
                         match self.board.get(x, y).unwrap() {
-                            Cell::No => self.board.set(x, y, Cell::Closed).unwrap(),
-                            Cell::Closed => self.board.set(x, y, Cell::No).unwrap(),
-                            Cell::Yes => (),
+                            Cell::No => {
+                                self.board.set(x, y, Cell::Closed).unwrap();
+                                self.play(&SfxType::UNSET);
+                            }
+                            Cell::Closed => {
+                                self.board.set(x, y, Cell::No).unwrap();
+                                self.play(&SfxType::LOCK);
+                            }
+                            Cell::Yes => self.play(&SfxType::ERROR),
                         }
                     }
                 }
@@ -343,6 +415,11 @@ impl Scene for GameplayScene {
             }
             self.vic_index +=
                 ((dt.num_seconds() as f32) + (dt.num_milliseconds() as f32 / 1_000.0)) * 5.0;
+
+            if !self.done {
+                self.done = true;
+                self.play(&SfxType::CLAPPING);
+            }
         } else {
             self.time_lapse = self.time_lapse.checked_add(&dt).unwrap();
         }
@@ -362,6 +439,25 @@ impl Scene for GameplayScene {
             12.0,
             Color::DARKGRAY,
         );
+        if self.mute {
+            draw.draw_text_ex(
+                self.font.as_ref(),
+                "M",
+                Vector2::new(self.window.width - 112.0, 4.0),
+                12.0,
+                0.0,
+                Color::BROWN,
+            );
+            draw.draw_text_ex(
+                self.font.as_ref(),
+                "\\",
+                Vector2::new(self.window.width - 112.0, 4.0),
+                12.0,
+                0.0,
+                Color::RED,
+            );
+        }
+        self.draw_info(&mut draw);
 
         State::Keep
     }

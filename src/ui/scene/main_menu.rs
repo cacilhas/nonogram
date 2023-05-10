@@ -6,7 +6,6 @@ use crate::game::BoardStruct;
 use super::gameplay::GameplayScene;
 use super::{Scene, State};
 use raylib::prelude::*;
-use raylib::{ffi, text::measure_text_ex};
 
 #[derive(Debug)]
 pub struct MainMenuScene {
@@ -34,6 +33,7 @@ impl Scene for MainMenuScene {
         _: &RaylibThread,
         rect: Rectangle,
         font: Rc<Font>,
+        _: Rc<RefCell<RaylibAudio>>,
     ) {
         handle.set_exit_key(Some(KeyboardKey::KEY_ESCAPE));
         self.rect = rect;
@@ -161,6 +161,25 @@ impl Scene for MainMenuScene {
             }
 
             if button_15x15.check_collision_point_rec(mouse) {
+                let board = Box::new(BoardStruct::<15, 15>::random(self.hints));
+                return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
+            }
+        } else {
+            if draw.is_key_released(KeyboardKey::KEY_H) {
+                self.hints = !self.hints;
+            }
+
+            if draw.is_key_released(KeyboardKey::KEY_ONE) {
+                let board = Box::new(BoardStruct::<5, 5>::random(self.hints));
+                return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
+            }
+
+            if draw.is_key_released(KeyboardKey::KEY_TWO) {
+                let board = Box::new(BoardStruct::<10, 10>::random(self.hints));
+                return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
+            }
+
+            if draw.is_key_released(KeyboardKey::KEY_THREE) {
                 let board = Box::new(BoardStruct::<15, 15>::random(self.hints));
                 return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
             }

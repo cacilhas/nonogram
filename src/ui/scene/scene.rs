@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
 use super::state::State;
 
@@ -14,6 +14,7 @@ pub trait Scene {
         thr: &RaylibThread,
         rect: Rectangle,
         font: Rc<Font>,
+        audio: Rc<RefCell<RaylibAudio>>,
     ) {
     }
 

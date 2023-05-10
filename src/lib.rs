@@ -1,9 +1,10 @@
 #[macro_use]
 extern crate static_init;
 
+mod audio;
 pub mod error;
-pub mod game;
-pub mod ui;
+mod game;
+mod ui;
 
 pub mod prelude {
     pub use crate::error;

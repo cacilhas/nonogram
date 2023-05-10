@@ -6,7 +6,6 @@ use crate::game::BoardStruct;
 use super::gameplay::GameplayScene;
 use super::{Scene, State};
 use raylib::prelude::*;
-use raylib::{ffi, text::measure_text_ex};
 
 #[derive(Debug)]
 pub struct MainMenuScene {

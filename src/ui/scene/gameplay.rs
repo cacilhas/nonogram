@@ -1,7 +1,6 @@
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use raylib::ffi;
 use raylib::prelude::*;
 
 use crate::audio::Sfx;
@@ -9,6 +8,7 @@ use crate::audio::SfxType;
 use crate::game::Board;
 use crate::game::Cell;
 
+use super::pause::Pause;
 use super::{Scene, State};
 
 pub struct GameplayScene {
@@ -206,7 +206,7 @@ impl GameplayScene {
     }
 
     fn draw_info(&self, draw: &mut RaylibMode2D<'_, RaylibDrawHandle>) {
-        let x = self.window.width - 132.0;
+        let x = self.window.width - 148.0;
         let mut y = 28.0;
         draw.draw_text_ex(
             self.font.as_ref(),
@@ -219,7 +219,16 @@ impl GameplayScene {
         y += 14.0;
         draw.draw_text_ex(
             self.font.as_ref(),
-            "ESC get back to menu",
+            "F3 to pause",
+            Vector2::new(x, y),
+            12.0,
+            1.0,
+            Color::GRAY,
+        );
+        y += 14.0;
+        draw.draw_text_ex(
+            self.font.as_ref(),
+            "ESC abort back to menu",
             Vector2::new(x, y),
             12.0,
             1.0,
@@ -286,8 +295,12 @@ impl Scene for GameplayScene {
             self.mute = !self.mute;
         }
 
+        if handle.is_key_released(KeyboardKey::KEY_F3) {
+            return State::New(Rc::new(RefCell::new(Pause::default())));
+        }
+
         if handle.is_key_released(KeyboardKey::KEY_ESCAPE) {
-            return State::Previous;
+            return State::Previous(1);
         }
 
         let camera = Camera2D {
@@ -433,7 +446,7 @@ impl Scene for GameplayScene {
                 Vector2::new(self.window.width - 112.0, 4.0),
                 12.0,
                 0.0,
-                Color::RED,
+                Color::BROWN,
             );
             draw.draw_text_ex(
                 self.font.as_ref(),

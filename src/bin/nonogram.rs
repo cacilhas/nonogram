@@ -54,8 +54,10 @@ fn main() -> anyhow::Result<()> {
                 );
                 scenes.push(scene);
             }
-            State::Previous => {
-                scenes.pop();
+            State::Previous(count) => {
+                for _ in 0..count {
+                    scenes.pop();
+                }
                 scenes
                     .first()
                     .expect("last scene popped")

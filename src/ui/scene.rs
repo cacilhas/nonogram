@@ -1,5 +1,6 @@
-pub mod gameplay;
+mod gameplay;
 pub mod main_menu;
+mod pause;
 mod scene;
 mod state;
 

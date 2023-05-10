@@ -295,7 +295,7 @@ impl Scene for GameplayScene {
             self.mute = !self.mute;
         }
 
-        if handle.is_key_released(KeyboardKey::KEY_F3) {
+        if handle.is_key_released(KeyboardKey::KEY_F3) && !self.board.is_done() {
             return State::New(Rc::new(RefCell::new(Pause::default())));
         }
 

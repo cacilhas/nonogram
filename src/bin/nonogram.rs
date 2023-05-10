@@ -58,11 +58,13 @@ fn main() -> anyhow::Result<()> {
                 for _ in 0..count {
                     scenes.pop();
                 }
-                scenes
-                    .first()
-                    .expect("last scene popped")
-                    .borrow_mut()
-                    .init(&mut handle, &thr, screen_rect, font.clone(), audio.clone());
+                scenes.last().expect("last scene popped").borrow_mut().init(
+                    &mut handle,
+                    &thr,
+                    screen_rect,
+                    font.clone(),
+                    audio.clone(),
+                );
             }
             State::Keep => (),
         }

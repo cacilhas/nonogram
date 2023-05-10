@@ -1,14 +1,19 @@
+use std::cell::RefCell;
 use std::rc::Rc;
 
 use raylib::ffi;
 use raylib::prelude::*;
 
+use crate::audio::Sfx;
+use crate::audio::SfxType;
 use crate::game::Board;
 use crate::game::Cell;
 
 use super::{Scene, State};
 
 pub struct GameplayScene {
+    audio: Option<Rc<RefCell<RaylibAudio>>>,
+    sfx: Sfx,
     board: Box<dyn Board>,
     hhints: Vec<String>,
     vhints: Vec<String>,
@@ -21,6 +26,7 @@ pub struct GameplayScene {
     cell_size: Vector2,
     time_lapse: chrono::Duration,
     vic_index: f32,
+    mute: bool,
 }
 
 impl GameplayScene {
@@ -56,6 +62,8 @@ impl GameplayScene {
             size,
             hhints,
             vhints,
+            audio: None,
+            sfx: Sfx::default(),
             font: font.into(),
             window: Rectangle::default(),
             board_rect: Rectangle::default(),
@@ -64,6 +72,15 @@ impl GameplayScene {
             cell_size: Vector2::default(),
             time_lapse: chrono::Duration::zero(),
             vic_index: 0.0,
+            mute: false,
+        }
+    }
+
+    fn play(&self, tpe: &SfxType) {
+        if !self.mute {
+            if let Some(audio) = &self.audio {
+                self.sfx.play(&mut audio.borrow_mut(), tpe);
+            }
         }
     }
 
@@ -194,9 +211,11 @@ impl Scene for GameplayScene {
         _: &raylib::RaylibThread,
         rect: raylib::prelude::Rectangle,
         font: Rc<Font>,
+        audio: Rc<RefCell<RaylibAudio>>,
     ) {
         handle.set_exit_key(None);
         self.font = font;
+        self.audio = Some(audio);
         self.window = rect;
         self.board_rect = Rectangle {
             x: rect.x,
@@ -265,16 +284,28 @@ impl Scene for GameplayScene {
                 if !self.board.is_done() {
                     if left_click && current_rect.check_collision_point_rec(mouse) {
                         match self.board.get(x, y).unwrap() {
-                            Cell::Yes => self.board.set(x, y, Cell::Closed).unwrap(),
-                            Cell::Closed => self.board.set(x, y, Cell::Yes).unwrap(),
-                            Cell::No => (),
+                            Cell::Yes => {
+                                self.board.set(x, y, Cell::Closed).unwrap();
+                                self.play(&SfxType::UNSET);
+                            }
+                            Cell::Closed => {
+                                self.board.set(x, y, Cell::Yes).unwrap();
+                                self.play(&SfxType::SET);
+                            }
+                            Cell::No => self.play(&SfxType::ERROR),
                         }
                     }
                     if right_click && current_rect.check_collision_point_rec(mouse) {
                         match self.board.get(x, y).unwrap() {
-                            Cell::No => self.board.set(x, y, Cell::Closed).unwrap(),
-                            Cell::Closed => self.board.set(x, y, Cell::No).unwrap(),
-                            Cell::Yes => (),
+                            Cell::No => {
+                                self.board.set(x, y, Cell::Closed).unwrap();
+                                self.play(&SfxType::UNSET);
+                            }
+                            Cell::Closed => {
+                                self.board.set(x, y, Cell::No).unwrap();
+                                self.play(&SfxType::LOCK);
+                            }
+                            Cell::Yes => self.play(&SfxType::ERROR),
                         }
                     }
                 }

@@ -34,6 +34,7 @@ impl Scene for MainMenuScene {
         _: &RaylibThread,
         rect: Rectangle,
         font: Rc<Font>,
+        _: Rc<RefCell<RaylibAudio>>,
     ) {
         handle.set_exit_key(Some(KeyboardKey::KEY_ESCAPE));
         self.rect = rect;

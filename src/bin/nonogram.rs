@@ -23,7 +23,7 @@ fn main() -> anyhow::Result<()> {
         .size(width, height)
         .title("nonogram") // WM_CLASS
         .build();
-    let audio = raylib::audio::RaylibAudio::init_audio_device();
+    let audio = Rc::new(RefCell::new(raylib::audio::RaylibAudio::init_audio_device()));
     handle.set_target_fps(30);
     handle.set_window_title(&thr, "Nonogram");
     handle.get_window_state().set_fullscreen_mode(true);
@@ -31,7 +31,7 @@ fn main() -> anyhow::Result<()> {
 
     let font: Rc<Font> = fonts::get_font(&mut handle, &thr)?.into();
     let mut main_scene = MainMenuScene::default();
-    main_scene.init(&mut handle, &thr, screen_rect, font.clone());
+    main_scene.init(&mut handle, &thr, screen_rect, font.clone(), audio.clone());
     let mut scenes: Vec<Rc<RefCell<dyn Scene>>> = vec![Rc::new(RefCell::new(main_scene))];
     let mut tick = Utc::now();
 
@@ -45,9 +45,13 @@ fn main() -> anyhow::Result<()> {
         };
         match state {
             State::New(scene) => {
-                scene
-                    .borrow_mut()
-                    .init(&mut handle, &thr, screen_rect, font.clone());
+                scene.borrow_mut().init(
+                    &mut handle,
+                    &thr,
+                    screen_rect,
+                    font.clone(),
+                    audio.clone(),
+                );
                 scenes.push(scene);
             }
             State::Previous => {
@@ -56,7 +60,7 @@ fn main() -> anyhow::Result<()> {
                     .first()
                     .expect("last scene popped")
                     .borrow_mut()
-                    .init(&mut handle, &thr, screen_rect, font.clone());
+                    .init(&mut handle, &thr, screen_rect, font.clone(), audio.clone());
             }
             State::Keep => (),
         }

@@ -121,7 +121,7 @@ impl Scene for MainMenuScene {
         };
         draw.draw_text_ex(self.font.as_ref(), "15x15", position, 64.0, 1.0, tint);
 
-        let size = measure_text_ex(self.font.as_ref(), "Hints", 64.0, 1.0);
+        let size = measure_text_ex(self.font.as_ref(), "Easy", 64.0, 1.0);
         let position = Vector2::new((self.rect.width - size.x) / 2.0, bottom);
         let button_hints = Rectangle {
             x: position.x,
@@ -143,7 +143,7 @@ impl Scene for MainMenuScene {
         } else {
             Color::DARKSLATEBLUE
         };
-        draw.draw_text_ex(self.font.as_ref(), "Hints", position, 64.0, 1.0, color);
+        draw.draw_text_ex(self.font.as_ref(), "Easy", position, 64.0, 1.0, color);
 
         if clicked {
             if button_hints.check_collision_point_rec(mouse) {
@@ -165,7 +165,7 @@ impl Scene for MainMenuScene {
                 return State::New(Rc::new(RefCell::new(GameplayScene::new(board))));
             }
         } else {
-            if draw.is_key_released(KeyboardKey::KEY_H) {
+            if draw.is_key_released(KeyboardKey::KEY_E) {
                 self.hints = !self.hints;
             }
 

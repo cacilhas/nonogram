@@ -5,15 +5,9 @@ use chrono::prelude::*;
 use nonogram::prelude::*;
 use raylib::prelude::*;
 
-#[cfg(target_os = "linux")]
-use xrandr::XHandle;
-
-#[cfg(target_os = "macos")]
-use core_graphics::display::CGDisplay;
-
 #[cfg(any(target_os = "linux", target_os = "macos"))]
 fn main() -> anyhow::Result<()> {
-    let (width, height) = get_dimensions()?;
+    let (width, height) = resolution::current_resolution()?;
     let screen_rect = Rectangle {
         width: width as f32,
         height: height as f32,
@@ -71,27 +65,4 @@ fn main() -> anyhow::Result<()> {
         tick = new_tick;
     }
     Ok(())
-}
-
-#[cfg(target_os = "linux")]
-fn get_dimensions() -> anyhow::Result<(i32, i32)> {
-    let monitors = XHandle::open()?.monitors()?;
-    monitors
-        .iter()
-        .find_map(|monitor| {
-            if monitor.is_primary {
-                Some((monitor.width_px, monitor.height_px))
-            } else {
-                None
-            }
-        })
-        .ok_or_else(|| error!("failed to find monitor resolution").into())
-}
-
-#[cfg(target_os = "macos")]
-fn get_dimensions() -> anyhow::Result<(i32, i32)> {
-    let display = CGDisplay::main();
-    let width = display.pixels_wide();
-    let height = display.pixels_high();
-    Ok((width as i32, height as i32))
 }

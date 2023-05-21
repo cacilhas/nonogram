@@ -1,6 +1,6 @@
 [package]
 name        = "nonogram"
-version     = "2.0.5"
+version     = "2.0.6"
 edition     = "2021"
 authors     = ["Rodrigo Montegasppα Cacilhας <montegasppa@cacilhas.info"]
 license     = "BSD-3-Clause"
@@ -22,6 +22,7 @@ strip = true
 anyhow = "1.0"
 chrono = "0.4"
 fastrand = "1.9"
+resolution = "0.1"
 static_init = "1.0"
 thiserror = "1.0"
 walkdir = "2.3"
@@ -30,12 +31,6 @@ walkdir = "2.3"
 version = "4.5"
 git = "https://github.com/litten2up/raylib-rs"
 branch = "4.5.0"
-
-[target.'cfg(target_os = "linux")'.dependencies]
-xrandr = "0.1"
-
-[target.'cfg(target_os = "macos")'.dependencies]
-core-graphics = "0.22"
 
 [[bin]]
 name = "nonogram"

@@ -394,17 +394,16 @@ dependencies = [
 
 [[package]]
 name = "nonogram"
-version = "2.0.5"
+version = "2.0.6"
 dependencies = [
  "anyhow",
  "chrono",
- "core-graphics",
  "fastrand",
  "raylib",
+ "resolution",
  "static_init",
  "thiserror",
  "walkdir",
- "xrandr",
 ]
 
 [[package]]
@@ -532,6 +531,17 @@ name = "regex-syntax"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a5996294f19bd3aae0453a862ad728f60e6600695733dd5df01da90c54363a3c"
+
+[[package]]
+name = "resolution"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ef47b6f2f50abc001a8823f0d435002a86f545b279b446d803ec70bc40616066"
+dependencies = [
+ "core-graphics",
+ "thiserror",
+ "xrandr",
+]
 
 [[package]]
 name = "rustc-hash"

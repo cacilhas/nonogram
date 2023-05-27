@@ -26,7 +26,8 @@ fn main() -> anyhow::Result<()> {
     let font: Rc<Font> = fonts::get_font(&mut handle, &thr)?.into();
     let mut main_scene = MainMenuScene::default();
     main_scene.init(&mut handle, &thr, screen_rect, font.clone(), audio.clone());
-    let mut scenes: Vec<Rc<RefCell<dyn Scene>>> = vec![Rc::new(RefCell::new(main_scene))];
+    let mut scenes = Vec::<Rc<RefCell<dyn Scene>>>::with_capacity(3);
+    scenes.push(Rc::new(RefCell::new(main_scene)));
     let mut tick = Utc::now();
 
     while !handle.window_should_close() {

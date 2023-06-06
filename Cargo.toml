@@ -1,14 +1,15 @@
 [package]
-name        = "nonogram"
-version     = "2.0.7"
-edition     = "2021"
+name        = "kodumaro-nonogram"
+version     = "3.0.0"
 authors     = ["Rodrigo Montegasppα Cacilhας <montegasppa@cacilhas.info"]
 license     = "BSD-3-Clause"
 readme      = "README.md"
-homepage    = "https://github.com/cacilhas/nonogram"
+homepage    = "https://crates.io/crates/kodumaro-nonogram"
 repository  = "https://github.com/cacilhas/nonogram"
-keywords    = ["game", "raylib"]
+keywords    = ["raylib"]
+categories  = ["Games"]
 description = "A random nonogram game."
+edition     = "2021"
 
 [profile.release]
 opt-level     = "s"
@@ -23,14 +24,10 @@ anyhow = "1.0"
 chrono = "0.4"
 fastrand = "1.9"
 resolution = "0.1"
+rscenes = "1.2"
 static_init = "1.0"
 thiserror = "1.0"
 walkdir = "2.3"
-
-[dependencies.raylib]
-version = "4.5"
-git = "https://github.com/litten2up/raylib-rs"
-branch = "4.5.0"
 
 [[bin]]
 name = "nonogram"

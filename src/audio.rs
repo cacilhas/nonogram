@@ -1,5 +1,6 @@
-use raylib::prelude::*;
+use rscenes::prelude::*;
 
+#[derive(Clone, Copy)]
 pub enum SfxType {
     CLAPPING,
     ERROR,
@@ -29,7 +30,7 @@ impl Default for Sfx {
 }
 
 impl Sfx {
-    pub fn play(&self, audio: &mut RaylibAudio, tpe: &SfxType) {
+    pub fn play(&self, audio: &mut RaylibAudio, tpe: SfxType) {
         let sound = match tpe {
             SfxType::CLAPPING => &self.clapping,
             SfxType::ERROR => &self.error,
@@ -43,10 +44,9 @@ impl Sfx {
     }
 
     fn load_sound(bytes: &'static [u8]) -> Option<Sound> {
-        let data = bytes.iter().map(|e| e.to_owned()).collect::<Vec<u8>>();
-        match Wave::load_wave_from_mem(".wav", &data, data.len() as i32) {
-            Err(_) => None,
-            Ok(wave) => Sound::load_sound_from_wave(&wave).ok(),
-        }
+        let wav: &str = mem::WaveType::Wav.into();
+        mem::load_wave(wav, bytes)
+            .ok()
+            .and_then(|wave| Sound::load_sound_from_wave(&wave).ok())
     }
 }

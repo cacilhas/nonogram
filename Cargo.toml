@@ -31,3 +31,4 @@ walkdir = "2.3"
 
 [[bin]]
 name = "nonogram"
+path = "src/bin/nonogram.rs"

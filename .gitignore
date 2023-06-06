@@ -2,6 +2,7 @@
 *.bak
 .*
 .vscode
+Cargo.lock
 core
 target
 !.gitignore

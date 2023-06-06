@@ -9,8 +9,5 @@ mod ui;
 pub mod prelude {
     pub use crate::error;
     pub use crate::game::{Board, Cell};
-    pub use crate::ui::{
-        fonts,
-        scene::{main_menu::MainMenuScene, Scene, State},
-    };
+    pub use crate::ui::{fonts, main_menu::MainMenuScene, resources::Resources};
 }

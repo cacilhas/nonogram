@@ -1,2 +1,5 @@
 pub mod fonts;
-pub mod scene;
+mod gameplay;
+pub mod main_menu;
+mod pause;
+pub mod resources;

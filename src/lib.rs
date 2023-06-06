@@ -7,7 +7,7 @@
 //! # Install
 //!
 //! ```sh
-//! cargo install kodumaro-nonogram --bin nonogram
+//! cargo install kodumaro-nonogram
 //! ```
 //!
 //! If you have [UPX](https://upx.github.io/) installed, you maybe want to run:

@@ -1,15 +1,10 @@
-[The 3-Clause BSD License]: https://opensource.org/licenses/BSD-3-Clause
-[COPYING]: https://github.com/cacilhas/nonogram/blob/master/COPYING
-[Itch.io]: https://cacilhas.itch.io/nonogram
-[UPX]: https://upx.github.io/
-
 # Nonogram
 
-![Nonogram](./nonogram.png)
+![Nonogram](https://github.com/cacilhas/nonogram/raw/master/nonogram.png)
 
 A simple random nonogram game.
 
-More about it on [Itch.io][].
+More about it on [Itch.io](https://cacilhas.itch.io/nonogram).
 
 ## Install
 
@@ -17,7 +12,7 @@ More about it on [Itch.io][].
 cargo install --git https://github.com/cacilhas/nonogram --bin nonogram
 ```
 
-If you have [UPX][] installed, you maybe want to run:
+If you have [UPX](https://upx.github.io/) installed, you maybe want to run:
 
 ```sh
 upx ~/.cargo/bin/nonogram
@@ -32,5 +27,5 @@ You win when you have set all correct cells.
 
 ## License
 
-- [The 3-Clause BSD License][]
-- [COPYING][]
+- [The 3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause)
+- [COPYING](https://github.com/cacilhas/nonogram/blob/master/COPYING)

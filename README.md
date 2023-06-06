@@ -9,7 +9,7 @@ More about it on [Itch.io](https://cacilhas.itch.io/nonogram).
 ## Install
 
 ```sh
-cargo install --git https://github.com/cacilhas/nonogram --bin nonogram
+cargo install kodumaro-nonogram --bin nonogram
 ```
 
 If you have [UPX](https://upx.github.io/) installed, you maybe want to run:

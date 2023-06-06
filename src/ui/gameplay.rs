@@ -427,12 +427,12 @@ impl Scene<Resources> for GameplayScene {
         } else {
         }
 
-        let time = format!(
-            "{:02.0}:{:02.0}:{:02.0}",
-            self.time_lapse / 3600.0,
-            (self.time_lapse / 60.0) % 60.0,
-            self.time_lapse % 60.0,
-        );
+        let time = {
+            let secs = self.time_lapse as i32;
+            let min = secs / 60;
+            let hours = min / 60;
+            format!("{:02}:{:02}:{:02}", hours, min % 60, secs % 60)
+        };
         //let size = measure_text_ex(font.as_ref(), &time, 12.0, 2.0);
         monospace(
             &mut draw,

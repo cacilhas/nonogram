@@ -44,8 +44,7 @@ impl Sfx {
     }
 
     fn load_sound(bytes: &'static [u8]) -> Option<Sound> {
-        let wav: &str = mem::WaveType::Wav.into();
-        mem::load_wave(wav, bytes)
+        mem::load_wave(mem::WaveType::Wav, bytes)
             .ok()
             .and_then(|wave| Sound::load_sound_from_wave(&wave).ok())
     }

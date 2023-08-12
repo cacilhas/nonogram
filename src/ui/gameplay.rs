@@ -14,6 +14,7 @@ use super::resources::Resources;
 
 pub struct GameplayScene {
     sfx: Sfx,
+    background: Color,
     board: Rc<RefCell<dyn Board>>,
     hhints: Vec<String>,
     vhints: Vec<String>,
@@ -61,6 +62,7 @@ impl GameplayScene {
             size,
             hhints,
             vhints,
+            background: colors::WHEAT,
             sfx: Sfx::default(),
             board_rect: Rectangle::default(),
             hhints_rect: Rectangle::default(),
@@ -79,7 +81,12 @@ impl GameplayScene {
         }
     }
 
-    fn draw_lines(&self, draw: &mut RaylibMode2D<'_, RaylibDrawHandle>, font: Rc<Font>) {
+    fn draw_lines(
+        &self,
+        draw: &mut RaylibMode2D<'_, RaylibDrawHandle>,
+        font: Rc<Font>,
+        mouse: Vector2,
+    ) {
         let font_size = if self.cell_size.x < self.cell_size.y {
             self.cell_size.x
         } else {
@@ -87,8 +94,18 @@ impl GameplayScene {
         } * 0.75
             - 2.0;
 
-        self.draw_vertical_lines(draw, font.clone(), font_size);
-        self.draw_horizontal_lines(draw, font.clone(), font_size);
+        self.draw_vertical_lines(
+            draw,
+            font.clone(),
+            font_size,
+            (((mouse.x - self.hhints_rect.x) / self.cell_size.x) + 0.5).floor() as usize,
+        );
+        self.draw_horizontal_lines(
+            draw,
+            font.clone(),
+            font_size,
+            ((mouse.y - self.vhints_rect.y) / self.cell_size.y).floor() as usize,
+        );
     }
 
     fn draw_vertical_lines(
@@ -96,18 +113,27 @@ impl GameplayScene {
         draw: &mut RaylibMode2D<'_, RaylibDrawHandle>,
         font: Rc<Font>,
         font_size: f32,
+        mouse_col: usize,
     ) {
         for i in 0..(self.size.x as usize) {
             let x = self.hhints_rect.x + (i as f32 * self.cell_size.x);
-            if i % 2 == 0 {
-                draw.draw_rectangle(
-                    (x - self.cell_size.x / 2.0) as i32,
-                    0,
-                    self.cell_size.x as i32,
-                    self.hhints_rect.height as i32,
-                    colors::LIGHTGRAY,
-                );
-            }
+            let bg = if i % 2 == 0 {
+                colors::LIGHTGRAY
+            } else {
+                self.background
+            };
+            let bg = if i == mouse_col {
+                colors::LIGHTPINK
+            } else {
+                bg
+            };
+            draw.draw_rectangle(
+                (x - self.cell_size.x / 2.0) as i32,
+                0,
+                self.cell_size.x as i32,
+                self.hhints_rect.height as i32,
+                bg,
+            );
             let mut y = 0.0;
             for text in self.hhints[i].split(' ') {
                 draw.draw_text_ex(
@@ -156,18 +182,27 @@ impl GameplayScene {
         draw: &mut RaylibMode2D<'_, RaylibDrawHandle>,
         font: Rc<Font>,
         font_size: f32,
+        mouse_row: usize,
     ) {
         for i in 0..(self.size.y as usize) {
             let y = self.vhints_rect.y + (i as f32 * self.cell_size.y) + 4.0;
-            if i % 2 == 0 {
-                draw.draw_rectangle(
-                    self.board_rect.width as i32 + 2,
-                    y as i32 - 4,
-                    self.vhints_rect.width as i32,
-                    self.cell_size.y as i32,
-                    colors::LIGHTGRAY,
-                );
-            }
+            let bg = if i % 2 == 0 {
+                colors::LIGHTGRAY
+            } else {
+                self.background
+            };
+            let bg = if i == mouse_row {
+                colors::LIGHTPINK
+            } else {
+                bg
+            };
+            draw.draw_rectangle(
+                self.board_rect.width as i32 + 2,
+                y as i32 - 4,
+                self.vhints_rect.width as i32,
+                self.cell_size.y as i32,
+                bg,
+            );
             let text = &self.vhints[i];
             draw.draw_text_ex(
                 font.as_ref(),
@@ -314,8 +349,7 @@ impl Scene<Resources> for GameplayScene {
         };
         let mut draw = handle.begin_mode2D(camera);
 
-        let background_color = colors::WHEAT;
-        draw.clear_background(background_color);
+        draw.clear_background(self.background);
 
         for y in 0..(self.size.y as usize) {
             for x in 0..(self.size.x as usize) {
@@ -392,7 +426,7 @@ impl Scene<Resources> for GameplayScene {
             }
         }
 
-        self.draw_lines(&mut draw, font.clone());
+        self.draw_lines(&mut draw, font.clone(), mouse);
 
         if self.board.borrow().is_done() {
             let size = measure_text("V", 240) as f32;

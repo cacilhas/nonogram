@@ -292,7 +292,7 @@ impl Scene<Resources> for GameplayScene {
             self.mute = !self.mute;
         }
         if handle.is_key_released(KeyboardKey::KEY_F3) && !self.board.borrow().is_done() {
-            return Ok::<State<Resources>, eyre::Report>(State::New(Box::new(Pause::default())));
+            return Ok::<State<Resources>, eyre::Report>(State::New(Box::<Pause>::default()));
         }
         if self.done {
             self.vic_index += dt * 5.0;
@@ -528,4 +528,4 @@ fn monospace(
     }
 }
 
-static VICTORY: [&'static str; 6] = ["W", "w", "v", ".", "v", "w"];
+static VICTORY: [&str; 6] = ["W", "w", "v", ".", "v", "w"];

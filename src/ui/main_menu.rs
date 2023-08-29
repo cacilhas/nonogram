@@ -5,19 +5,13 @@ use crate::game::{Board, BoardStruct};
 use super::{gameplay::GameplayScene, resources::Resources};
 use rscenes::prelude::*;
 
+#[derive(Default)]
 pub struct MainMenuScene {
     board: Option<Rc<RefCell<dyn Board>>>,
     hints: bool,
 }
 
-impl Default for MainMenuScene {
-    fn default() -> Self {
-        Self {
-            board: None,
-            hints: false,
-        }
-    }
-}
+
 
 impl fmt::Debug for MainMenuScene {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

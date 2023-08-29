@@ -14,11 +14,11 @@ fn main() -> eyre::Result<()> {
     let mut manager = SceneManager::new(builder, Resources::default());
     manager.config(|handle, thread, resources| {
         handle.set_target_fps(30);
-        handle.set_window_title(&thread, "Nonogram");
+        handle.set_window_title(thread, "Nonogram");
         handle.get_window_state().set_fullscreen_mode(true);
         resources.font = fonts::get_font(handle, thread)?.into();
         Ok::<(), eyre::Report>(())
     })?;
-    manager.add_first_scene(Box::new(MainMenuScene::default()));
+    manager.add_first_scene(Box::<MainMenuScene>::default());
     manager.start()
 }

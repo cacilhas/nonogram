@@ -26,9 +26,9 @@ impl fmt::Debug for MainMenuScene {
 }
 
 impl Scene<Resources> for MainMenuScene {
-    fn init(&mut self, _: &mut RaylibHandle, _: &RaylibThread) -> anyhow::Result<()> {
+    fn init(&mut self, _: &mut RaylibHandle, _: &RaylibThread) -> eyre::Result<()> {
         self.board = None;
-        Ok(())
+        Ok::<(), eyre::Report>(())
     }
 
     fn update(
@@ -36,12 +36,14 @@ impl Scene<Resources> for MainMenuScene {
         _: (&mut RaylibHandle, &RaylibThread),
         _: f32,
         _: &mut Resources,
-    ) -> anyhow::Result<State<Resources>> {
+    ) -> eyre::Result<State<Resources>> {
         if let Some(board) = self.board.clone() {
-            return Ok(State::New(Box::new(GameplayScene::new(board))));
+            return Ok::<State<Resources>, eyre::Report>(State::New(Box::new(GameplayScene::new(
+                board,
+            ))));
         }
 
-        Ok(State::Keep)
+        Ok::<State<Resources>, eyre::Report>(State::Keep)
     }
 
     fn draw(
@@ -49,7 +51,7 @@ impl Scene<Resources> for MainMenuScene {
         handle: &mut RaylibDrawHandle,
         screen: Rectangle,
         resources: &Resources,
-    ) -> anyhow::Result<()> {
+    ) -> eyre::Result<()> {
         let font = resources.font.clone();
         let clicked = handle.is_mouse_button_released(MouseButton::MOUSE_LEFT_BUTTON);
         let x = handle.get_mouse_x();
@@ -194,6 +196,6 @@ impl Scene<Resources> for MainMenuScene {
             }
         }
 
-        Ok(())
+        Ok::<(), eyre::Report>(())
     }
 }

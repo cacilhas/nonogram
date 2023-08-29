@@ -23,12 +23,12 @@ impl Scene<Resources> for Pause {
         (handle, _): (&mut RaylibHandle, &RaylibThread),
         dt: f32,
         _: &mut Resources,
-    ) -> anyhow::Result<State<Resources>> {
+    ) -> eyre::Result<State<Resources>> {
         self.time_lapse += dt;
         if self.time_lapse > self.threshold && handle.is_key_released(KeyboardKey::KEY_F3) {
-            return Ok(State::Previous(1));
+            return Ok::<State<Resources>, eyre::Report>(State::Previous(1));
         }
-        Ok(State::Keep)
+        Ok::<State<Resources>, eyre::Report>(State::Keep)
     }
 
     fn draw(
@@ -36,7 +36,7 @@ impl Scene<Resources> for Pause {
         handle: &mut RaylibDrawHandle,
         screen: Rectangle,
         resources: &Resources,
-    ) -> anyhow::Result<()> {
+    ) -> eyre::Result<()> {
         let font = resources.font.clone();
         let camera = Camera2D {
             zoom: 1.0,
@@ -64,6 +64,6 @@ impl Scene<Resources> for Pause {
         let position = Vector2::new((screen.width - size.x) / 2.0, bottom);
         draw.draw_text_ex(font.as_ref(), text, position, 32.0, 2.0, colors::BLACK);
 
-        Ok(())
+        Ok::<(), eyre::Report>(())
     }
 }

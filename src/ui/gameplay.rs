@@ -287,26 +287,26 @@ impl Scene<Resources> for GameplayScene {
         (handle, _): (&mut RaylibHandle, &RaylibThread),
         dt: f32,
         _: &mut Resources,
-    ) -> anyhow::Result<State<Resources>> {
+    ) -> eyre::Result<State<Resources>> {
         if handle.is_key_released(KeyboardKey::KEY_F2) {
             self.mute = !self.mute;
         }
         if handle.is_key_released(KeyboardKey::KEY_F3) && !self.board.borrow().is_done() {
-            return Ok(State::New(Box::new(Pause::default())));
+            return Ok::<State<Resources>, eyre::Report>(State::New(Box::new(Pause::default())));
         }
         if self.done {
             self.vic_index += dt * 5.0;
         } else {
             self.time_lapse += dt;
         }
-        Ok(State::Keep)
+        Ok::<State<Resources>, eyre::Report>(State::Keep)
     }
     fn draw(
         &mut self,
         handle: &mut RaylibDrawHandle,
         screen: Rectangle,
         resources: &Resources,
-    ) -> anyhow::Result<()> {
+    ) -> eyre::Result<()> {
         let audio = resources.audio.clone();
         let font = resources.font.clone();
 
@@ -496,7 +496,7 @@ impl Scene<Resources> for GameplayScene {
         }
         self.draw_info(&mut draw, screen, font.clone());
 
-        Ok(())
+        Ok::<(), eyre::Report>(())
     }
 }
 

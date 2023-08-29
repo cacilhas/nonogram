@@ -4,10 +4,10 @@ use super::cell::Cell;
 use crate::error;
 
 pub trait Board {
-    fn get(&self, x: usize, y: usize) -> anyhow::Result<Cell>;
-    fn set(&mut self, x: usize, y: usize, value: Cell) -> anyhow::Result<()>;
-    fn get_hhint(&self, x: usize) -> anyhow::Result<&Vec<usize>>;
-    fn get_vhint(&self, y: usize) -> anyhow::Result<&Vec<usize>>;
+    fn get(&self, x: usize, y: usize) -> eyre::Result<Cell>;
+    fn set(&mut self, x: usize, y: usize, value: Cell) -> eyre::Result<()>;
+    fn get_hhint(&self, x: usize) -> eyre::Result<&Vec<usize>>;
+    fn get_vhint(&self, y: usize) -> eyre::Result<&Vec<usize>>;
     fn size(&self) -> (usize, usize);
     fn is_done(&self) -> bool;
 }
@@ -20,15 +20,15 @@ pub struct BoardStruct<const W: usize, const H: usize> {
 }
 
 impl<const W: usize, const H: usize> Board for BoardStruct<W, H> {
-    fn get(&self, x: usize, y: usize) -> anyhow::Result<Cell> {
+    fn get(&self, x: usize, y: usize) -> eyre::Result<Cell> {
         Self::check_coordinates(x, y)?;
-        Ok(self.data[y][x])
+        Ok::<Cell, eyre::Report>(self.data[y][x])
     }
 
-    fn set(&mut self, x: usize, y: usize, value: Cell) -> anyhow::Result<()> {
+    fn set(&mut self, x: usize, y: usize, value: Cell) -> eyre::Result<()> {
         Self::check_coordinates(x, y)?;
         self.data[y][x] = value;
-        Ok(())
+        Ok::<(), eyre::Report>(())
     }
 
     #[inline]
@@ -36,14 +36,14 @@ impl<const W: usize, const H: usize> Board for BoardStruct<W, H> {
         (W, H)
     }
 
-    fn get_hhint(&self, x: usize) -> anyhow::Result<&Vec<usize>> {
+    fn get_hhint(&self, x: usize) -> eyre::Result<&Vec<usize>> {
         Self::check_x(x)?;
-        Ok(&self.hhints[x])
+        Ok::<&Vec<usize>, eyre::Report>(&self.hhints[x])
     }
 
-    fn get_vhint(&self, y: usize) -> anyhow::Result<&Vec<usize>> {
+    fn get_vhint(&self, y: usize) -> eyre::Result<&Vec<usize>> {
         Self::check_y(y)?;
-        Ok(&self.vhints[y])
+        Ok::<&Vec<usize>, eyre::Report>(&self.vhints[y])
     }
 
     fn is_done(&self) -> bool {
@@ -81,23 +81,23 @@ impl<const W: usize, const H: usize> BoardStruct<W, H> {
         board
     }
 
-    fn check_coordinates(x: usize, y: usize) -> anyhow::Result<()> {
+    fn check_coordinates(x: usize, y: usize) -> eyre::Result<()> {
         Self::check_x(x)?;
         Self::check_y(y)
     }
 
-    fn check_x(x: usize) -> anyhow::Result<()> {
+    fn check_x(x: usize) -> eyre::Result<()> {
         if x >= W {
             return Err(error!("x [{x}] cannot be greater or equal to {W}").into());
         }
-        Ok(())
+        Ok::<(), eyre::Report>(())
     }
 
-    fn check_y(y: usize) -> anyhow::Result<()> {
+    fn check_y(y: usize) -> eyre::Result<()> {
         if y >= H {
             return Err(error!("y [{y}] cannot be greater or equal to {H}").into());
         }
-        Ok(())
+        Ok::<(), eyre::Report>(())
     }
 
     fn reset_hints(&mut self) {

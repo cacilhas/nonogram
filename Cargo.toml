@@ -1,6 +1,6 @@
 [package]
 name        = "kodumaro-nonogram"
-version     = "3.0.3"
+version     = "3.0.4"
 authors     = ["Rodrigo Montegasppα Cacilhας <montegasppa@cacilhas.info"]
 license     = "BSD-3-Clause"
 readme      = "README.md"
@@ -20,14 +20,18 @@ rpath = false
 strip = true
 
 [dependencies]
-anyhow = "1.0"
 chrono = "0.4"
+eyre = "0.6"
 fastrand = "2.0"
 resolution = "0.1"
-rscenes = "1.3"
 static_init = "1.0"
 thiserror = "1.0"
 walkdir = "2.3"
+
+[dependencies.rscenes]
+version = "1.4"
+features = ["eyre"]
+default-features = false
 
 [[bin]]
 name = "nonogram"

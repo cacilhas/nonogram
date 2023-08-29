@@ -7,14 +7,14 @@ use walkdir::WalkDir;
 
 use crate::error;
 
-pub fn get_font(handle: &mut RaylibHandle, thr: &RaylibThread) -> anyhow::Result<Font> {
+pub fn get_font(handle: &mut RaylibHandle, thr: &RaylibThread) -> eyre::Result<Font> {
     let font_name = find_gnome_font()?;
     let path = find_font_path(font_name)?;
-    Ok(handle.load_font(thr, &path).map_err(error::Error)?)
+    Ok::<Font, eyre::Report>(handle.load_font(thr, &path).map_err(error::Error)?)
 }
 
 #[cfg(target_os = "linux")]
-fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
+fn find_font_path(font_name: Vec<String>) -> eyre::Result<String> {
     for directory in FONT_DIRS.iter() {
         'entry: for entry in WalkDir::new(directory).into_iter().filter_map(Result::ok) {
             if let Some(current) = entry.file_name().to_str() {
@@ -24,7 +24,7 @@ fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
                             continue 'entry;
                         }
                     }
-                    return Ok(current.to_owned());
+                    return Ok::<String, eyre::Report>(current.to_owned());
                 }
             }
         }
@@ -33,15 +33,15 @@ fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
 }
 
 #[cfg(target_os = "macos")]
-fn find_font_path(font_name: Vec<String>) -> anyhow::Result<String> {
+fn find_font_path(font_name: Vec<String>) -> eyre::Result<String> {
     let font = font_name
         .first()
         .ok_or_else(|| error!("no font supplied"))?;
-    Ok(format!("/System/Library/Fonts/{}", font))
+    Ok::<String, eyre::Report>(format!("/System/Library/Fonts/{}", font))
 }
 
 #[cfg(target_os = "linux")]
-fn find_gnome_font() -> anyhow::Result<Vec<String>> {
+fn find_gnome_font() -> eyre::Result<Vec<String>> {
     let output = Command::new("gsettings")
         .arg("get")
         .arg("org.gnome.desktop.interface")
@@ -60,15 +60,15 @@ fn find_gnome_font() -> anyhow::Result<Vec<String>> {
             .iter()
             .map(|e| e.to_string())
             .collect::<Vec<String>>();
-        Ok(font)
+        Ok::<Vec<String>, eyre::Report>(font)
     } else {
         let err = String::from_utf8_lossy(&output.stderr).trim().to_owned();
         Err(error!("error getting org.gnome.desktop.interface[font-name]: {err}").into())
     }
 }
 #[cfg(target_os = "macos")]
-fn find_gnome_font() -> anyhow::Result<Vec<String>> {
-    Ok(vec!["SFCompactRounded.ttf".to_owned()])
+fn find_gnome_font() -> eyre::Result<Vec<String>> {
+    Ok::<Vec<String, eyre::Report>>(vec!["SFCompactRounded.ttf".to_owned()])
 }
 
 #[cfg(target_os = "linux")]

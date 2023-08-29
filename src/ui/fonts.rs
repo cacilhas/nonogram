@@ -68,7 +68,7 @@ fn find_gnome_font() -> eyre::Result<Vec<String>> {
 }
 #[cfg(target_os = "macos")]
 fn find_gnome_font() -> eyre::Result<Vec<String>> {
-    Ok::<Vec<String, eyre::Report>>(vec!["SFCompactRounded.ttf".to_owned()])
+    Ok::<Vec<String>, eyre::Report>(vec!["SFCompactRounded.ttf".to_owned()])
 }
 
 #[cfg(target_os = "linux")]

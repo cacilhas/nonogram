@@ -279,6 +279,16 @@ impl GameplayScene {
             colors::GRAY,
         );
     }
+
+    fn hide_board(&self, handle: &mut RaylibDrawHandle) {
+        // TODO: consider pause
+        let camera = Camera2D {
+            zoom: 1.0,
+            ..Default::default()
+        };
+        let mut draw = handle.begin_mode2D(camera);
+        draw.clear_background(self.background);
+    }
 }
 
 impl Scene<Resources> for GameplayScene {
@@ -307,6 +317,11 @@ impl Scene<Resources> for GameplayScene {
         screen: Rectangle,
         resources: &Resources,
     ) -> eyre::Result<()> {
+        if !handle.is_window_focused() {
+            self.hide_board(handle);
+            return Ok::<(), eyre::Report>(());
+        }
+
         let audio = resources.audio.clone();
         let font = resources.font.clone();
 

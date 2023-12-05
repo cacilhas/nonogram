@@ -296,7 +296,7 @@ impl Scene<Resources> for GameplayScene {
         }
         if self.done {
             self.vic_index += dt * 5.0;
-        } else {
+        } else if handle.is_window_focused() {
             self.time_lapse += dt;
         }
         Ok::<State<Resources>, eyre::Report>(State::Keep)

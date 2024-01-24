@@ -301,7 +301,10 @@ impl Scene<Resources> for GameplayScene {
         if handle.is_key_released(KeyboardKey::KEY_F2) {
             self.mute = !self.mute;
         }
-        if handle.is_key_released(KeyboardKey::KEY_F3) && !self.board.borrow().is_done() {
+        if (handle.is_key_released(KeyboardKey::KEY_F3)
+            || handle.is_key_released(KeyboardKey::KEY_PAUSE))
+            && !self.board.borrow().is_done()
+        {
             return Ok::<State<Resources>, eyre::Report>(State::New(Box::<Pause>::default()));
         }
         if self.done {
